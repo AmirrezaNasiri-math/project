@@ -4,8 +4,20 @@
 void menu(void);
 void Admin_Login(void);
 void Admin_menu(void);
+void New_employee(void);
 int i;
-char one[1] = {'0'}, two[1] = {'2'};
+char one[2] = {'1'}, two[2] = {'2'};
+struct employee{
+    char name[20];
+    char family[20];
+    char date[20];
+    char phone[12];
+    char code_meli[11];
+    char email[20];
+    char username[20];
+    char password[20];
+    struct employee *link;
+};
 void main()
 {
     menu();
@@ -48,23 +60,23 @@ void menu(void)
 }
 void Admin_Login(void)
 {
-    int j = 0;
+    int i = 0;
     system("cls");
     char password[11];
     char defult_password[11] = {'@','A','m','i','r','_','1','3','8','5'};
-    printf("Admin                                              1. Back    2.exit");
+    printf("Admin                                                         1. Back    2.exit");
     printf("\n");
     printf("Password: ");
-    while(j != 1)
+    while(i != 1)
     {
         scanf("%s", password);
         if(strcmp(password, defult_password) == 0)
         {
-            j++;
+            i++;
         }
         else
         {
-            if(strcmp(password, one) == 0)
+            if(strcmp(password, one ) == 0)
             {
                 menu();
             }
@@ -86,7 +98,37 @@ void Admin_Login(void)
 }
 void Admin_menu(void)
 {
+    int i;
     system("cls");
     printf("Admin");
     printf("\n");
+    printf("1. New employee registration");
+    printf("\n");
+    printf("2. View employee list");
+    printf("\n");
+    printf("3. Removing an employee from the system");
+    printf("\n");
+    printf("4. Reports");
+    printf("\n");
+    printf("5. Log out of account");
+    printf("\n");
+    printf("\n");
+    printf("Please Enter Your Choice:");
+    scanf("%d", &i);
+    if(i == 1)
+    {
+        New_employee();
+    }
+}
+void New_employee(void)
+{
+    struct employee *start, *temp;
+    FILE *fp;
+    fp = fopen("Employee Profile.text","w");
+    start = malloc(sizeof(struct employee));
+    temp = start;
+    while(temp != NULL)
+    {
+        gets(temp->name);
+    }
 }
