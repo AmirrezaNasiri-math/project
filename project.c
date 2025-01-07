@@ -124,11 +124,40 @@ void New_employee(void)
 {
     struct employee *start, *temp;
     FILE *fp;
+    system("cls");
     fp = fopen("Employee Profile.text","w");
     start = malloc(sizeof(struct employee));
-    temp = start;
-    while(temp != NULL)
-    {
-        gets(temp->name);
-    }
+    start;
+    printf("Please enter the name's employee:");
+    scanf("%s",start->name);
+    printf("\n");
+    printf("Please enter the family name's employee:");
+    scanf("%s",start->family);
+    printf("\n");
+    printf("Please enter the registration date:");
+    scanf("%s",start->date);
+    printf("\n");
+    printf("Please enter the phone number's employee:");
+    scanf("%s",start->phone);
+    printf("\n");
+    printf("Please enter the employee's national code:");
+    scanf("%s",start->code_meli);
+    printf("\n");
+    printf("Please enter the employee's email:");
+    scanf("%s",start->email);
+    printf("\n");
+    printf("Please enter the user name for employee:");
+    scanf("%s",start->username);
+    printf("\n");
+    printf("Please enter the password for employee:");
+    scanf("%s",start->password);
+    fputs(start->name,fp);
+    fputs(start->family,fp);
+    fputs(start->date,fp);
+    fputs(start->phone,fp);
+    fputs(start->code_meli,fp);
+    fputs(start->email,fp);
+    fputs(start->username,fp);
+    fputs(start->password,fp);
+    fclose(fp);
 }
