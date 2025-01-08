@@ -5,6 +5,7 @@ void menu(void);
 void Admin_Login(void);
 void Admin_menu(void);
 void New_employee(void);
+void employee_menu(void);
 int i;
 char one[2] = {'1'}, two[2] = {'2'};
 struct employee{
@@ -46,6 +47,7 @@ void menu(void)
     }
     if(i == 2)
     {
+        employee_menu();
 
     }
     if(i == 3)
@@ -160,4 +162,8 @@ void New_employee(void)
     fputs(start->username,fp);
     fputs(start->password,fp);
     fclose(fp);
+}
+void eployee_menu(void)
+{
+    int i;
 }
