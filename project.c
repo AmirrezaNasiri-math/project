@@ -10,7 +10,7 @@ void Admin_menu(void);
 void New_employee(void);
 void list_employee(void);
 void delet_employee(void);
-void addatend_employee()
+void addatend_employee(void);
 int i;
 char one[2] = {'1'}, two[2] = {'2'};
 // tarif sakhtar baray moshakhsat karmandan.
@@ -316,5 +316,7 @@ void delet_employee(void)
     system("cls");
     printf("Please enter The name of the employee to be deleted:");
     gets(delet);
+    start = malloc(sizeof(struct employee));
 
 }
+void addatend_employee()
