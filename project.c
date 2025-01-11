@@ -10,11 +10,13 @@ void Admin_menu(void);
 void New_employee(void);
 void list_employee(void);
 void delet_employee(void);
-void addatend_employee(void);
+//finl = file in link list.
+void finl_employee(void);
 int i;
 char one[2] = {'1'}, two[2] = {'2'};
 // tarif sakhtar baray moshakhsat karmandan.
 struct employee{
+    int stid;
     char name[20];
     char family[20];
     char date[11];
@@ -216,7 +218,7 @@ void New_employee(void)
     printf("\n");
     printf("1. New employee registration");
     printf("\n");
-    printf("2. Back");
+    printf("2. Back\n");
     printf("Please Enter Your Choice:");
     scanf("%d", &i);
     if(i == 1)
@@ -237,9 +239,8 @@ void list_employee(void)
     system("cls");
     fp = fopen("Employee Profile.text","r");
     start = malloc(sizeof(struct employee));
-    end = malloc(sizeof(struct employee));
     temp = start;
-    printf("                                                  1. Back");
+    printf("                                                  1. Back\n");
     while(feof(fp) == 0)
     {
         //ebteda kol khat dar line ezafe mishavad bad
@@ -317,6 +318,72 @@ void delet_employee(void)
     printf("Please enter The name of the employee to be deleted:");
     gets(delet);
     start = malloc(sizeof(struct employee));
+    end = malloc(sizeof(struct employee));
+    end->link = NULL;
+}
+void finl_employee(void)
+{
+    struct employee *start, *end, *temp;
+    int i = 0;
+    FILE *fp;
+    fp = fopen("Employee Profile.text", "r");
+    start = malloc(sizeof(struct employee));
+    end = malloc(sizeof(struct employee));
+    temp = malloc(sizeof(struct employee));
+    temp = start;
+    start->link = end;
+    end ->link = NULL;
+    while(feof(fp) == 0)
+    {
+        if(i != 0)
+        {
+            temp = malloc(sizeof(struct employee));
+            end->link = temp;
+            end = temp;
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            // ba estefade as strcspn \n ra peida va bejash \0 garar midahim.
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->name, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->family, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->date, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->phone, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->code_meli, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->email, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->username, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->password, line);
+        }
+        i++;
+        temp = temp->link;
+    }
 
 }
-void addatend_employee()
