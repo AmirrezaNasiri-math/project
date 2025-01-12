@@ -16,7 +16,6 @@ int i;
 char one[2] = {'1'}, two[2] = {'2'};
 // tarif sakhtar baray moshakhsat karmandan.
 struct employee{
-    int stid;
     char name[20];
     char family[20];
     char date[11];
@@ -27,6 +26,7 @@ struct employee{
     char password[20];
     struct employee *link;
 };
+struct employee *start = NULL, *end = NULL, *temp = NULL;
 void main()
 {
     // karbar vaghti vard barname mishavad ba menu barname robero mishavad.
@@ -233,75 +233,29 @@ void New_employee(void)
 void list_employee(void)
 {
     int i;
-    struct employee *start, *temp;
-    FILE *fp;
-    char line[100];
     system("cls");
-    fp = fopen("Employee Profile.text","r");
-    start = malloc(sizeof(struct employee));
-    temp = start;
+    finl_employee();
     printf("                                                  1. Back\n");
-    while(feof(fp) == 0)
+    temp = start;
+    while(temp != NULL)
     {
-        //ebteda kol khat dar line ezafe mishavad bad
-        printf("FIRST NAME:");
-        if(fgets(line, sizeof(line), fp) != NULL)
-        {
-            // ba estefade as strcspn \n ra peida va bejash \0 garar midahim.
-            line[strcspn(line, "\n")] = '\0';
-            strcpy(temp->name, line);
-        }
-        puts(temp->name);
-        printf("LAST NAME:");
-        if(fgets(line, sizeof(line), fp) != NULL)
-        {
-            line[strcspn(line, "\n")] = '\0';
-            strcpy(temp->family, line);
-        }
-        puts(temp->family);
-        printf("REGISTRATION DATE:");
-        if(fgets(line, sizeof(line), fp) != NULL)
-        {
-            line[strcspn(line, "\n")] = '\0';
-            strcpy(temp->date, line);
-        }
-        puts(temp->date);
-        printf("HER/HIS PHONE NUMBER:");
-        if(fgets(line, sizeof(line), fp) != NULL)
-        {
-            line[strcspn(line, "\n")] = '\0';
-            strcpy(temp->phone, line);
-        }
-        puts(temp->phone);
-        printf("HER/HIS NATIONAL CODE:");
-        if(fgets(line, sizeof(line), fp) != NULL)
-        {
-            line[strcspn(line, "\n")] = '\0';
-            strcpy(temp->code_meli, line);
-        }
-        puts(temp->code_meli);
-        printf("HER/HIS EMAIL:");
-        if(fgets(line, sizeof(line), fp) != NULL)
-        {
-            line[strcspn(line, "\n")] = '\0';
-            strcpy(temp->email, line);
-        }
-        puts(temp->email);
-        printf("USER NAME:");
-        if(fgets(line, sizeof(line), fp) != NULL)
-        {
-            line[strcspn(line, "\n")] = '\0';
-            strcpy(temp->username, line);
-        }
-        puts(temp->username);
-        printf("PASSWORD:");
-        if(fgets(line, sizeof(line), fp) != NULL)
-        {
-            line[strcspn(line, "\n")] = '\0';
-            strcpy(temp->password, line);
-        }
-        puts(temp->password);
-        printf("------------------------------------------\n");
+       puts(temp->name);
+       puts(temp->family);
+       puts(temp->date);
+       puts(temp->phone);
+       puts(temp->code_meli);
+       puts(temp->email);
+       puts(temp->username);
+       puts(temp->password);
+       printf("-----------------------------------------\n");
+       temp = temp->link;
+    }
+    while(temp != NULL)
+    {
+        struct employee *next;
+        next = temp ->link;
+        free(temp);
+        temp = next;
     }
     scanf("%d", &i);
     if(i == 1)
@@ -312,35 +266,81 @@ void list_employee(void)
 void delet_employee(void)
 {
     int i;
-    struct employee *start, *temp;
-    char line, delet;
+    char delet[20];
+    FILE *fp1, *fp2;
     system("cls");
     printf("Please enter The name of the employee to be deleted:");
-    gets(delet);
-    start = malloc(sizeof(struct employee));
-    end = malloc(sizeof(struct employee));
-    end->link = NULL;
+    scanf("%s", delet);
+    finl_employee();
+    temp = start;
+    fp1 = fopen("Employee Profile.text","w");
+    fp2 = fopen("Deleted Employee Profile.text", "a");
+    while(temp != NULL)
+    {
+        if(strcmp(delet, temp->name) == 0)
+        {
+
+            fputs(temp->name,fp2);
+            fprintf(fp2,"\n");
+            fputs(temp->family,fp2);
+            fprintf(fp2,"\n");
+            fputs(temp->date,fp2);
+            fprintf(fp2,"\n");
+            fputs(temp->phone,fp2);
+            fprintf(fp2,"\n");
+            fputs(temp->code_meli,fp2);
+            fprintf(fp2,"\n");
+            fputs(temp->email,fp2);
+            fprintf(fp2,"\n");
+            fputs(temp->username,fp2);
+            fprintf(fp2,"\n");
+            fputs(temp->password,fp2);
+            fprintf(fp2,"\n");
+            temp = temp->link;
+        }
+        fputs(temp->name,fp1);
+        fprintf(fp1,"\n");
+        fputs(temp->family,fp1);
+        fprintf(fp1,"\n");
+        fputs(temp->date,fp1);
+        fprintf(fp1,"\n");
+        fputs(temp->phone,fp1);
+        fprintf(fp1,"\n");
+        fputs(temp->code_meli,fp1);
+        fprintf(fp1,"\n");
+        fputs(temp->email,fp1);
+        fprintf(fp1,"\n");
+        fputs(temp->username,fp1);
+        fprintf(fp1,"\n");
+        fputs(temp->password,fp1);
+        fprintf(fp1,"\n");
+        temp = temp->link;
+    }
+    fclose(fp1);
+    fclose(fp2);
+    temp = start;
+    while(temp != NULL)
+    {
+        struct employee *next;
+        next = temp ->link;
+        free(temp);
+        temp = next;
+    }
+    printf("%s's removal was successful.                          1.back", delet);
+    scanf("%d", &i);
+    if(i == 1)
+    {
+        Admin_menu();
+    }
 }
 void finl_employee(void)
 {
-    struct employee *start, *end, *temp;
-    int i = 0;
+    char line[100];
     FILE *fp;
     fp = fopen("Employee Profile.text", "r");
-    start = malloc(sizeof(struct employee));
-    end = malloc(sizeof(struct employee));
-    temp = malloc(sizeof(struct employee));
-    temp = start;
-    start->link = end;
-    end ->link = NULL;
     while(feof(fp) == 0)
     {
-        if(i != 0)
-        {
-            temp = malloc(sizeof(struct employee));
-            end->link = temp;
-            end = temp;
-        }
+        temp = malloc(sizeof(struct employee));
         if(fgets(line, sizeof(line), fp) != NULL)
         {
             // ba estefade as strcspn \n ra peida va bejash \0 garar midahim.
@@ -382,8 +382,17 @@ void finl_employee(void)
             line[strcspn(line, "\n")] = '\0';
             strcpy(temp->password, line);
         }
-        i++;
-        temp = temp->link;
+        temp->link = NULL;
+        if(start == NULL)
+        {
+            start = temp;
+            end = temp;
+        }
+        else
+        {
+            end->link = temp;
+            end = temp;
+        }
     }
-
+    fclose(fp);
 }
