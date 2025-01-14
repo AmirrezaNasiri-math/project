@@ -4,6 +4,8 @@
 #include<time.h>
 #include<windows.h>
 void date(char datestr[11]);
+void validity(char val_date[11]);
+void remainder(void);
 void menu(void);
 void Admin_Login(void);
 void Admin_menu(void);
@@ -14,7 +16,9 @@ void Staff_login(void);
 void Staff_menu(void);
 void New_member(void);
 void New_book(void);
-char ID_book(void);
+void ID_book(char ID[10]);
+void list_member(void);
+void delet_member(void);
 int i;
 char one[2] = {'1'}, two[2] = {'2'};
 char karmand[20];
@@ -35,6 +39,7 @@ struct member{
     char name[20];
     char family[20];
     char date[11];
+    char end_date[11];
     char phone[12];
     char code_meli[11];
     char email[40];
@@ -46,10 +51,10 @@ struct member{
 struct book{
     char name[20];
     char publication[20];
-    char author[20];
-    char year[5];
+    char author[100];
+    char year[10];
     char date[11];
-    char id;
+    char id[10];
     char username[20];
     char genre[20];
     struct book *link;
@@ -69,6 +74,85 @@ void date(char datestr[11])
     // tm = mohtavay khane t.
     struct tm tm = *localtime(&t);
     sprintf(datestr,"%04d-%02d-%02d", tm.tm_year + 1900, tm.tm_mon + 1 , tm.tm_mday);
+}
+void validity(char val_date[11])
+{
+    time_t t;
+    t = time(NULL);
+    // tm = mohtavay khane t.
+    struct tm tm = *localtime(&t);
+    sprintf(val_date,"%04d-%02d-%02d", tm.tm_year + 1901, tm.tm_mon + 1 , tm.tm_mday);
+}
+void remainder(void)
+{
+    struct member *start = NULL, *end = NULL, *temp = NULL;
+    char line[100];
+    FILE *fp;
+    fp = fopen("Member Profile.txt", "r");
+    while(1)
+    {
+        temp = malloc(sizeof(struct member));
+        if(fgets(line, sizeof(line), fp) == NULL)
+        {
+            break;
+        }
+        // ba estefade as strcspn \n ra peida va bejash \0 garar midahim.
+        line[strcspn(line, "\n")] = '\0';
+        strcpy(temp->name, line);
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->family, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->date, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->phone, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->code_meli, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->email, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->active, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->username, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->password, line);
+        }
+        temp->link = NULL;
+        if(start == NULL)
+        {
+            start = temp;
+            end = temp;
+        }
+        else
+        {
+            end->link = temp;
+            end = temp;
+        }
+    }
+    fclose(fp);
+
 }
 void menu(void)
 {
@@ -117,43 +201,73 @@ void Admin_Login(void)
     // dar ebteda har chi ke ghablan dar barname nevehte sode pak mishavad va bayad karbar login konad.
     int i = 0;
     system("cls");
+    char username[6];
+    char defult_username[6]={'A','d','m','i','n'};
     char password[11];
     //enja password admin ro tarif mikonim.
     char defult_password[11] = {'@','A','m','i','r','_','1','3','8','5'};
-    printf("Admin                                                         1. Back    2.exit");
-    printf("\n");
-    printf("Password: ");
-    while(i != 1)
+    printf("Please enter the your username: ");
+    scanf("%s", username);
+    if(strcmp(username, defult_username) == 0)
     {
-        //inaja yek password az karbar gerefte mishavad
-        scanf("%s", password);
-        // va ba password karbar moghyese mishavad
-        if(strcmp(password, defult_password) == 0)
+        system("cls");
+        printf("Admin                                                         1. Back    2.exit");
+        printf("\n");
+        printf("Password: ");
+        while(i != 1)
         {
-            //agar barabar bod az halghe kharej mishavad.
-            i++;
-        }
-        else
-        {
-            if(strcmp(password, one ) == 0)
+            //inaja yek password az karbar gerefte mishavad
+            scanf("%s", password);
+            // va ba password karbar moghyese mishavad
+            if(strcmp(password, defult_password) == 0)
             {
-                // zamani ke karbar adad yek ra vared konad vard ghesmat menu mishavad.
+                //agar barabar bod az halghe kharej mishavad.
+                i++;
+            }
+            else
+            {
+                if(strcmp(password, one ) == 0)
+                {
+                    // zamani ke karbar adad yek ra vared konad vard ghesmat menu mishavad.
+                    menu();
+                }
+                else
+                {
+                    if(strcmp(password, two) == 0)
+                    {
+                        // zamani ke sefr vared shavad az barname khrej mishavad.
+                        exit(0);
+                    }
+                    else
+                    {
+                        // har bar ramz ghalat bashad in chap mishavd.
+                        printf("Password is false!");
+                        printf("\n");
+                        printf("Please enter again.");
+                    }
+                }
+            }
+        }
+    }
+    else
+    {
+        printf("Username is False.\n");
+        printf("1. Try again.");
+        printf("2. back");
+        while(1)
+        {
+            scanf("%d", &i);
+            if(i = 1)
+            {
+                Admin_Login();
+            }
+            if(i = 2)
+            {
                 menu();
             }
             else
             {
-                if(strcmp(password, two) == 0)
-                {
-                    // zamani ke sefr vared shavad az barname khrej mishavad.
-                    exit(0);
-                }
-                else
-                {
-                    // har bar ramz ghalat bashad in chap mishavd.
-                    printf("Password is false!");
-                    printf("\n");
-                    printf("Please enter again.");
-                }
+                printf("Please enter the one or two: ");
             }
         }
     }
@@ -202,7 +316,7 @@ void Admin_menu(void)
 void New_employee(void)
 {
     int i;
-    struct employee *start, *temp;
+    struct employee *start;
     FILE *fp;
     system("cls");
     fp = fopen("Employee Profile.txt","a");
@@ -213,7 +327,7 @@ void New_employee(void)
     printf("Please enter the family name's employee:");
     scanf("%s",start->family);
     printf("\n");
-    printf("the registration date:");
+    printf("The registration date:");
     date(start->date);
     puts(start->date);
     printf("\n");
@@ -231,7 +345,6 @@ void New_employee(void)
     printf("\n");
     printf("Please enter the password for employee:");
     scanf("%s",start->password);
-    fprintf(fp,"\n");
     fputs(start->name,fp);
     fprintf(fp,"\n");
     fputs(start->family,fp);
@@ -269,9 +382,9 @@ void New_employee(void)
 void list_employee(void)
 {
     struct employee *start = NULL, *end = NULL, *temp = NULL;
-    int i;
     system("cls");
-    char line[100];
+    int j;
+    char line[100], i[100];
     FILE *fp;
     fp = fopen("Employee Profile.txt", "r");
     while(1)
@@ -336,16 +449,24 @@ void list_employee(void)
     temp = start;
     while(temp != NULL)
     {
-       puts(temp->name);
-       puts(temp->family);
-       puts(temp->date);
-       puts(temp->phone);
-       puts(temp->code_meli);
-       puts(temp->email);
-       puts(temp->username);
-       puts(temp->password);
-       printf("-----------------------------------------\n");
-       temp = temp->link;
+        printf("FIRST NAME:                         ");
+        puts(temp->name);
+        printf("LAST NAME:                          ");
+        puts(temp->family);
+        printf("REGISTRATION DATE:                  ");
+        puts(temp->date);
+        printf("PHONE:                              ");
+        puts(temp->phone);
+        printf("NATIONAL CODE:                      ");
+        puts(temp->code_meli);
+        printf("EMAIL:                              ");
+        puts(temp->email);
+        printf("USERNAME:                           ");
+        puts(temp->username);
+        printf("PASSWORD:                           ");
+        puts(temp->password);
+        printf("--------------------------------------------------------------------\n");
+        temp = temp->link;
     }
     while(temp != NULL)
     {
@@ -354,17 +475,29 @@ void list_employee(void)
         free(temp);
         temp = next;
     }
-    scanf("%d", &i);
-    if(i == 1)
+    while(1)
     {
-        Admin_menu();
+        scanf("%s", i);
+        if(strlen(i) > 100)
+        {
+            printf("Please enter 1.\n");
+        }
+        j = atoi(i);
+        if(j == 1)
+        {
+            Admin_menu();
+        }
+        else
+        {
+            printf("Please enter 1.\n");
+        }
     }
 }
 void delet_employee(void)
 {
     struct employee *start = NULL, *end = NULL, *temp = NULL;
-    int i, j = 0;
-    char delet[20];
+    int k, j = 0;
+    char delet[20], i[100];
     FILE *fp1, *fp2;
     system("cls");
     char line[100];
@@ -436,7 +569,7 @@ void delet_employee(void)
     while(temp != NULL)
     {
 
-        if(strcmp(delet, temp->name) == 0)
+        if(strcmp(delet, temp->username) == 0)
         {
             fputs(temp->name,fp2);
             fprintf(fp2, "\n");
@@ -497,10 +630,23 @@ void delet_employee(void)
     {
         printf("No one named %s was found.                            1.back", delet);
     }
-    scanf("%d", &i);
-    if(i == 1)
+    // ke karbar age chert o pert vared kard hamechi ok bashe.
+    while(1)
     {
-        Admin_menu();
+        scanf("%s", i);
+        if(strlen(i) > 100)
+        {
+            printf("Please enter 1.\n");
+        }
+        k = atoi(i);
+        if(k == 1)
+        {
+            Admin_menu();
+        }
+        else
+        {
+            printf("Please enter 1.\n");
+        }
     }
 }
 void Staff_login(void)
@@ -512,15 +658,16 @@ void Staff_login(void)
     char line[100];
     FILE *fp;
     fp = fopen("Employee Profile.txt", "r");
-    while(feof(fp) == 0)
+    while(1)
     {
         temp = malloc(sizeof(struct employee));
-        if(fgets(line, sizeof(line), fp) != NULL)
+        if(fgets(line, sizeof(line), fp) == NULL)
         {
-            // ba estefade as strcspn \n ra peida va bejash \0 garar midahim.
-            line[strcspn(line, "\n")] = '\0';
-            strcpy(temp->name, line);
+            break;
         }
+        // ba estefade as strcspn \n ra peida va bejash \0 garar midahim.
+        line[strcspn(line, "\n")] = '\0';
+        strcpy(temp->name, line);
         if(fgets(line, sizeof(line), fp) != NULL)
         {
             line[strcspn(line, "\n")] = '\0';
@@ -603,7 +750,8 @@ void Staff_login(void)
         //baray inke dar tol ejra barname username karmand ro dashtebashim.
         strcpy(karmand,temp->username);
         system("cls");
-        printf("Please enter the your password:                            1.back   2.exit\n");
+        printf("%s %s", temp->name, temp->family);
+        printf("\nPlease enter the your password:                            1.back   2.exit\n");
         while(i != 1)
         {
             //inaja yek password az karbar gerefte mishavad
@@ -645,7 +793,7 @@ void Staff_menu(void)
     int i;
     // inja safe menu karmand namayesh dade mishavad.
     system("cls");
-    printf("Staff");
+    puts(karmand);
     printf("\n");
     printf("1. New Member registration");
     printf("\n");
@@ -675,11 +823,11 @@ void Staff_menu(void)
     }
     if(i == 3)
     {
-
+        list_member();
     }
     if(i == 4)
     {
-
+        delet_member();
     }
     if(i == 5)
     {
@@ -707,43 +855,51 @@ void New_member(void)
     system("cls");
     fp = fopen("Member Profile.txt","a");
     start = malloc(sizeof(struct member));
-    printf("Please enter the name's employee:");
+    printf("Please enter the name's member:");
     scanf("%s",start->name);
     printf("\n");
-    printf("Please enter the family name's employee:");
+    printf("Please enter the family name's member:");
     scanf("%s",start->family);
     printf("\n");
-    printf("the registration date:");
+    printf("The registration date:");
     date(start->date);
     puts(start->date);
     printf("\n");
-    printf("Please enter the phone number's employee:");
+    printf("Membership expiration date:");
+    validity(start->end_date);
+    puts(start->end_date);
+    printf("\n");
+    printf("Please enter the phone number's member:");
     scanf("%s",start->phone);
     printf("\n");
-    printf("Please enter the employee's national code:");
+    printf("Please enter the member's national code:");
     scanf("%s",start->code_meli);
     printf("\n");
-    printf("Please enter the employee's email:");
+    printf("Please enter the member's email:");
     scanf("%s",start->email);
     printf("\n");
-    printf("Please enter the user name for employee:");
+    strcpy(start->active, "Active");
+    printf("Please enter the user name for member:");
     scanf("%s",start->username);
     printf("\n");
-    printf("Please enter the password for employee:");
+    printf("Please enter the password for member:");
     scanf("%s",start->password);
-    fprintf(fp,"\n");
     fputs(start->name,fp);
     fprintf(fp,"\n");
     fputs(start->family,fp);
     fprintf(fp,"\n");
     fputs(start->date,fp);
     fprintf(fp,"\n");
+    fputs(start->end_date, fp);
+    fprintf(fp, "\n");
     fputs(start->phone,fp);
     fprintf(fp,"\n");
     fputs(start->code_meli,fp);
     fprintf(fp,"\n");
     fputs(start->email,fp);
     fprintf(fp,"\n");
+    fputs(start->active, fp);
+    fprintf(fp, "\n");
     fputs(start->username,fp);
     fprintf(fp,"\n");
     fputs(start->password,fp);
@@ -752,7 +908,7 @@ void New_member(void)
     fclose(fp);
     Sleep(2000);
     printf("\n");
-    printf("1. New employee registration");
+    printf("1. New member registration");
     printf("\n");
     printf("2. Back\n");
     printf("Please Enter Your Choice:");
@@ -769,7 +925,7 @@ void New_member(void)
 void New_book(void)
 {
     int i;
-    struct book *start, *temp = NULL;
+    struct book *start;
     FILE *fp;
     system("cls");
     fp = fopen("Book Profile.txt","a");
@@ -777,21 +933,29 @@ void New_book(void)
     printf("Please enter the name's book:");
     scanf("%s",start->name);
     printf("\n");
-    printf("Please enter the family name's publication:");
+    printf("Please enter the name's publication:");
+    // baray khali kardan bafer az in tabe estefade kardam.
+    fflush(stdin);
     scanf("%s",start->publication);
     printf("\n");
     printf("Please enter the name's author:");
+    // baray khali kardan bafer az in tabe estefade kardam.
+    fflush(stdin);
     scanf("%s", start->author);
     printf("\n");
     printf("Please enter the year of publication:");
-    scanf("%s",start->year);
+    // baray khali kardan bafer az in tabe estefade kardam.
+    fflush(stdin);
+    scanf("%s", start->year);
     printf("\n");
     printf("the registration date:");
     date(start->date);
     puts(start->date);
     printf("\n");
     printf("the ID book: ");
-
+    ID_book(start->id);
+    puts(start->id);
+    printf("\n");
     printf("Please enter the user name for employee:");
     puts(karmand);
     strcpy(start->username,karmand);
@@ -809,7 +973,7 @@ void New_book(void)
     fprintf(fp,"\n");
     fputs(start->date,fp);
     fprintf(fp,"\n");
-    fprintf(fp, "%d", start->id);
+    fputs(start->id,fp);
     fprintf(fp,"\n");
     fputs(start->username,fp);
     fprintf(fp,"\n");
@@ -833,22 +997,23 @@ void New_book(void)
         Staff_menu();
     }
 }
-char ID_book(void)
+void ID_book(char ID[10])
 {
-    int i;
+    int i, j;
     struct book *start = NULL, *end = NULL, *temp = NULL;
     char line[100];
     FILE *fp;
     fp = fopen("Book Profile.txt", "r");
-    while(feof == 0)
+    while(1)
     {
         temp = malloc(sizeof(struct book));
-        if(fgets(line, sizeof(line), fp) != NULL)
+        if(fgets(line, sizeof(line), fp) == NULL)
         {
-            // ba estefade as strcspn \n ra peida va bejash \0 garar midahim.
-            line[strcspn(line, "\n")] = '\0';
-            strcpy(temp->name, line);
+            break;
         }
+        // ba estefade as strcspn \n ra peida va bejash \0 garar midahim.
+        line[strcspn(line, "\n")] = '\0';
+        strcpy(temp->name, line);
         if(fgets(line, sizeof(line), fp) != NULL)
         {
             line[strcspn(line, "\n")] = '\0';
@@ -897,8 +1062,286 @@ char ID_book(void)
         }
     }
     temp = start;
+    j = 1;
     while(temp != NULL)
     {
-
+        i = atoi(temp->id);
+        if(j == i)
+        {
+            temp = temp->link;
+        }
+        j++;
+    }
+    sprintf(ID, "%d", j);
+}
+void list_member(void)
+{
+    struct member *start = NULL, *end = NULL, *temp = NULL;
+    int i;
+    system("cls");
+    char line[100];
+    FILE *fp;
+    fp = fopen("Member Profile.txt", "r");
+    while(1)
+    {
+        temp = malloc(sizeof(struct member));
+        if(fgets(line, sizeof(line), fp) == NULL)
+        {
+            break;
+        }
+        // ba estefade as strcspn \n ra peida va bejash \0 garar midahim.
+        line[strcspn(line, "\n")] = '\0';
+        strcpy(temp->name, line);
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->family, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->date, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->end_date, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->phone, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->code_meli, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->email, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->active, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->username, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->password, line);
+        }
+        temp->link = NULL;
+        if(start == NULL)
+        {
+            start = temp;
+            end = temp;
+        }
+        else
+        {
+            end->link = temp;
+            end = temp;
+        }
+    }
+    fclose(fp);
+    printf("                                                  1. Back\n");
+    temp = start;
+    while(temp != NULL)
+    {
+        printf("FIRST NAME:                         ");
+        puts(temp->name);
+        printf("LAST NAME:                          ");
+        puts(temp->family);
+        printf("REGISTRATION DATE:                  ");
+        puts(temp->date);
+        printf("MEMBERSHIP EXPIRATION DATE:         ");
+        puts(temp->end_date);
+        printf("PHONE NUMBER:                       ");
+        puts(temp->phone);
+        printf("NATIONAL CODE:                      ");
+        puts(temp->code_meli);
+        printf("EMAIL:                              ");
+        puts(temp->email);
+        printf("STATUS:                             ");
+        puts(temp->active);
+        printf("USERNAME:                           ");
+        puts(temp->username);
+        printf("PASSWORD:                           ");
+        puts(temp->password);
+        printf("--------------------------------------------------------------------\n");
+        temp = temp->link;
+    }
+    while(temp != NULL)
+    {
+        struct employee *next;
+        next = temp ->link;
+        free(temp);
+        temp = next;
+    }
+    scanf("%d", &i);
+    if(i == 1)
+    {
+        Staff_menu();
+    }
+    else
+    {
+        printf("Please enter 1.");
+    }
+}
+void delet_member(void)
+{
+    struct member *start = NULL, *end = NULL, *temp = NULL;
+    int k, j = 0;
+    char delet[20], i[100];
+    system("cls");
+    char line[100];
+    FILE *fp;
+    fp = fopen("Member Profile.txt", "r");
+    while(1)
+    {
+        temp = malloc(sizeof(struct member));
+        if(fgets(line, sizeof(line), fp) == NULL)
+        {
+            break;
+        }
+        // ba estefade as strcspn \n ra peida va bejash \0 garar midahim.
+        line[strcspn(line, "\n")] = '\0';
+        strcpy(temp->name, line);
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->family, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->date, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->end_date, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->phone, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->code_meli, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->email, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->active, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->username, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->password, line);
+        }
+        temp->link = NULL;
+        if(start == NULL)
+        {
+            start = temp;
+            end = temp;
+        }
+        else
+        {
+            end->link = temp;
+            end = temp;
+        }
+    }
+    fclose(fp);
+    printf("Please enter The name of the employee to be deleted:");
+    scanf("%s", delet);
+    temp = start;
+    while(temp == NULL)
+    {
+        if(strcmp(delet , temp->username) == 0)
+        {
+            strcpy(temp->active,"Former");
+            j++;
+        }
+        temp = temp->link;
+    }
+    temp = start;
+    fp = fopen("Member Profile.txt", "w");
+    while(temp == NULL)
+    {
+        fputs(temp->name,fp);
+        fprintf(fp, "\n");
+        fputs(temp->family,fp);
+        fprintf(fp, "\n");
+        fputs(temp->date,fp);
+        fprintf(fp, "\n");
+        fputs(temp->end_date,fp);
+        fprintf(fp, "\n");
+        fputs(temp->phone,fp);
+        fprintf(fp, "\n");
+        fputs(temp->code_meli,fp);
+        fprintf(fp, "\n");
+        fputs(temp->email,fp);
+        fprintf(fp, "\n");
+        fputs(temp->active,fp);
+        fprintf(fp, "\n");
+        fputs(temp->username,fp);
+        fprintf(fp, "\n");
+        fputs(temp->password,fp);
+        fprintf(fp, "\n");
+        temp = temp->link;
+    }
+    temp = start;
+    while(temp != NULL)
+    {
+        struct member *next;
+        next = temp->link;
+        free(temp);
+        temp = next;
+    }
+    // momken kasi baray hazf kardan nabashe.
+    if(j == 1)
+    {
+        printf("%s's removal was successful.                          1.back", delet);
+    }
+    else
+    {
+        printf("No one usernamed %s was found.                            1.back", delet);
+    }
+    // ke age karbar chert o pert vared kard hamechi ok bashe.
+    while(1)
+    {
+        scanf("%s", i);
+        if(strlen(i) > 100)
+        {
+            printf("Please enter 1.\n");
+        }
+        k = atoi(i);
+        if(k == 1)
+        {
+            Staff_menu();
+        }
+        else
+        {
+            printf("Please enter 1.\n");
+        }
     }
 }
