@@ -29,6 +29,7 @@ void Change_Phone(void);
 void renewal(void);
 void Member_login(void);
 void Member_menu(void);
+void register_trust(void);
 char one[2] = {'1'}, two[2] = {'2'}, three[2] = {'3'}, four[2] = {'4'}, five[2] = {'5'}, six[2] = {'6'}, seven[2] = {'7'}, eight[2] = {'8'}, nine[2] = {'9'};
 char karmand[20], ozve[20];
 // ID_book baray shenase ketab ke har bar ketab jadid sabt mishe yeki behesh ezafe mishe.
@@ -66,6 +67,7 @@ struct book{
     char id[10];
     char username[20];
     char genre[20];
+    char trust[20];
     struct book *link;
 };
 void main()
@@ -1095,6 +1097,8 @@ void New_book(void)
     printf("Please enter the genre's book:");
     fflush(stdin);
     gets(start->genre);
+    printf("The hand of someone who is trusted:")
+    strcpy(start->trust, "NO ONE");
     fputs(start->name,fp);
     fprintf(fp,"\n");
     fputs(start->publication,fp);
@@ -1111,6 +1115,8 @@ void New_book(void)
     fprintf(fp,"\n");
     fputs(start->genre,fp);
     fprintf(fp,"\n");
+    fputs(start->trust, fp);
+    fprintf(fp, "\n");
     system("cls");
     printf("The operation was successful.");
     fclose(fp);
@@ -2588,7 +2594,7 @@ void Member_menu(void)
         scanf("%s", i);
         if(strcmp(i, one) == 0)
         {
-
+            register_trust();
         }
         else
         {
@@ -2627,4 +2633,77 @@ void Member_menu(void)
         }
 
     }
+}
+void register_trust(void)
+{
+    system("cls");
+    struct book *start = NULL, *end = NULL, *temp = NULL;
+    system("cls");
+    char line[100] ,i[100];
+    FILE *fp;
+    fp = fopen("Book Profile.txt", "r");
+    while(1)
+    {
+        temp = malloc(sizeof(struct book));
+        if(fgets(line, sizeof(line), fp) == NULL)
+        {
+            break;
+        }
+        // ba estefade as strcspn \n ra peida va bejash \0 garar midahim.
+        line[strcspn(line, "\n")] = '\0';
+        strcpy(temp->name, line);
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->publication, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->author, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->year, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->date, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->id, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->username, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->genre, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->trust, line);
+        }
+        temp->link = NULL;
+        if(start == NULL)
+        {
+            start = temp;
+            end = temp;
+        }
+        else
+        {
+            end->link = temp;
+            end = temp;
+        }
+    }
+    fclose(fp);
+
 }
