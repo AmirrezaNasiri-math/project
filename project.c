@@ -43,8 +43,13 @@ void Change_Password_Member(void);
 void Change_Email_Member(void);
 void Change_Phone_Member(void);
 void report_Admin(void);
-void report_list_member(void);
-void report_list_employee(void);
+void report_Admin_list_member(void);
+void report_Admin_list_employee(void);
+void report_Admin_list_book(void);
+void report_Admin_list_book_2(void);
+void report_Admin_list_book_3(void);
+void report_Admin_history_book(void);
+void report_Admin_search(void);
 char one[2] = {'1', '\0'}, two[2] = {'2', '\0'}, three[2] = {'3', '\0'}, four[2] = {'4', '\0'}, five[2] = {'5', '\0'}, six[2] = {'6', '\0'}, seven[2] = {'7', '\0'}, eight[2] = {'8', '\0'}, nine[2] = {'9', '\0'}, ten[2] = {'10', '\0'}, eleven[2] = {'11', '\0'};
 char karmand[20], ozve[20];
 // ID_book baray shenase ketab ke har bar ketab jadid sabt mishe yeki behesh ezafe mishe.
@@ -780,27 +785,21 @@ void report_Admin(void)
 {
     system("cls");
     char i[100];
-    printf("1.  List of member profiles");
+    printf("1. List of member profiles");
     printf("\n");
-    printf("2.  List of employee profiles");
+    printf("2. List of employee profiles");
     printf("\n");
-    printf("3.  List of fired employees");
+    printf("3. List of all books");
     printf("\n");
-    printf("4.  List of all books");
+    printf("4. List of all books available for borrowing,all books currently on loan");
     printf("\n");
-    printf("5.  List of all books available for borrowing");
+    printf("5. List of books that are overdue for return");
     printf("\n");
-    printf("6.  List of all books currently on loan");
+    printf("6. History of borrowing books");
     printf("\n");
-    printf("7.  List of books that are overdue for return");
+    printf("7. List of books registered in the library by a specific employee");
     printf("\n");
-    printf("8.  History of borrowing books");
-    printf("\n");
-    printf("9.  History of book registration in the library");
-    printf("\n");
-    printf("10. List of books registered in the library by a specific employee");
-    printf("\n");
-    printf("11. Back");
+    printf("8. Back");
     printf("\n");
     printf("\n");
     printf("Please Enter Your Choice:");
@@ -809,47 +808,48 @@ void report_Admin(void)
         scanf("%s", i);
         if(strcmp(i, one) == 0)
         {
-            report_list_member();
+            report_Admin_list_member();
         }
         else
         {
             if(strcmp(i, two) == 0)
             {
-                report_list_employee();
+                report_Admin_list_employee();
             }
             else
             {
                 if(strcmp(i, three) == 0)
                 {
-
+                    // dar in ghesmat tarikhche sabt har ketab mojod ast.
+                    report_Admin_list_book();
                 }
                 else
                 {
                     if(strcmp(i, four) == 0)
                     {
-                        delet_member();
+                        report_Admin_list_book_2();
                     }
                     else
                     {
                         if(strcmp(i, five) == 0)
                         {
-                            New_book();
+                            report_Admin_list_book_3();
                         }
                         else
                         {
                             if(strcmp(i, six) == 0)
                             {
-
+                                report_Admin_history_book();
                             }
                             else
                             {
                                if(strcmp(i, seven) == 0)
                                {
-                                   setting_employee();
+                                   report_Admin_search();
                                }
                                else
                                {
-                                   if(strcmp(i , eleven) == 0)
+                                   if(strcmp(i , eight) == 0)
                                    {
                                        Admin_menu();
                                    }
@@ -867,7 +867,7 @@ void report_Admin(void)
 
     }
 }
-void report_list_member(void)
+void report_Admin_list_member(void)
 {
     struct member *start = NULL, *end = NULL, *temp = NULL;
     int j = 0;
@@ -1081,7 +1081,7 @@ void report_list_member(void)
         }
     }
 }
-void report_list_employee(void)
+void report_Admin_list_employee(void)
 {
     system("cls");
     struct employee *start = NULL, *end = NULL, *temp = NULL;
@@ -1285,6 +1285,887 @@ void report_list_employee(void)
     while(temp != NULL)
     {
         struct employee *next;
+        next = temp->link;
+        free(temp);
+        temp = next;
+    }
+    while(1)
+    {
+        scanf("%s", i);
+        if(strcmp(i, one) == 0)
+        {
+            report_Admin();
+        }
+        else
+        {
+            printf("Please enter one.\n");
+        }
+    }
+}
+void report_Admin_list_book(void)
+{
+    system("cls");
+    char i[100];
+    FILE *fp;
+    char line[100];
+    struct book *start = NULL, *temp = NULL, *end = NULL;
+    HANDLE color = GetStdHandle(STD_OUTPUT_HANDLE);
+    fp = fopen("Book Profile.txt", "r");
+    while(1)
+    {
+        temp = malloc(sizeof(struct book));
+        if(fgets(line, sizeof(line), fp) == NULL)
+        {
+            break;
+        }
+        // ba estefade as strcspn \n ra peida va bejash \0 garar midahim.
+        line[strcspn(line, "\n")] = '\0';
+        strcpy(temp->name, line);
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->publication, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->author, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->year, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->date, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->id, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->username, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->genre, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->username_member, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->date_trust, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->date_take, line);
+        }
+        temp->link = NULL;
+        if(start == NULL)
+        {
+            start = temp;
+            end = temp;
+        }
+        else
+        {
+            end->link = temp;
+            end = temp;
+        }
+    }
+    fclose(fp);
+    temp = start;
+    printf("                                                                    1.Back\n");
+    printf("\n");
+    while(temp != NULL)
+    {
+        printf("NAME BOOK:                          ");
+        puts(temp->name);
+        printf("NAME PUBLICATION:                   ");
+        puts(temp->publication);
+        printf("NAME AUTHOR:                        ");
+        puts(temp->author);
+        printf("YEAR OF PUBLICATION:                ");
+        puts(temp->year);
+        printf("BOOK REGISTERATION DATE:            ");
+        puts(temp->date);
+        printf("BOOK ID:                            ");
+        puts(temp->id);
+        printf("BOOK GENRE:                         ");
+        puts(temp->genre);
+        temp = temp->link;
+        printf("--------------------------------------------------------------------\n");
+    }
+    temp = start;
+    while(temp != NULL)
+    {
+        struct book *next;
+        next = temp->link;
+        free(temp);
+        temp = next;
+    }
+    while(1)
+    {
+        scanf("%s", i);
+        if(strcmp(i, one) == 0)
+        {
+            report_Admin();
+        }
+        else
+        {
+            printf("Please enter one.\n");
+        }
+    }
+}
+void report_Admin_list_book_2(void)
+{
+    system("cls");
+    char i[100];
+    FILE *fp;
+    char line[100];
+    int j = 0, k = 0;
+    struct book *start = NULL, *temp = NULL, *end = NULL;
+    HANDLE color = GetStdHandle(STD_OUTPUT_HANDLE);
+    fp = fopen("Book Profile.txt", "r");
+    while(1)
+    {
+        temp = malloc(sizeof(struct book));
+        if(fgets(line, sizeof(line), fp) == NULL)
+        {
+            break;
+        }
+        // ba estefade as strcspn \n ra peida va bejash \0 garar midahim.
+        line[strcspn(line, "\n")] = '\0';
+        strcpy(temp->name, line);
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->publication, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->author, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->year, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->date, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->id, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->username, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->genre, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->username_member, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->date_trust, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->date_take, line);
+        }
+        temp->link = NULL;
+        if(start == NULL)
+        {
+            start = temp;
+            end = temp;
+        }
+        else
+        {
+            end->link = temp;
+            end = temp;
+        }
+    }
+    fclose(fp);
+    temp = start;
+    printf("                                                                    1.Back\n");
+    printf("List of unborrowed books\n");
+    printf("\n");
+    while(temp != NULL)
+    {
+        if(strcmp(temp->username_member, "NULL") == 0)
+        {
+            printf("NAME BOOK:                          ");
+            puts(temp->name);
+            printf("NAME PUBLICATION:                   ");
+            puts(temp->publication);
+            printf("NAME AUTHOR:                        ");
+            puts(temp->author);
+            printf("YEAR OF PUBLICATION:                ");
+            puts(temp->year);
+            printf("BOOK REGISTERATION DATE:            ");
+            puts(temp->date);
+            printf("BOOK ID:                            ");
+            puts(temp->id);
+            printf("BOOK GENRE:                         ");
+            puts(temp->genre);
+            printf("A PERSON WHO HAS BORROWED MONEY:    ");
+            puts(temp->username_member);
+            printf("TRUST REGISTRATION DATE:            ");
+            puts(temp->date_trust);
+            printf("BOOK RATURN DATE:                   ");
+            puts(temp->date_take);
+            temp = temp->link;
+            printf("--------------------------------------------------------------------\n");
+            j++;
+        }
+        else
+        {
+            temp = temp->link;
+        }
+    }
+    if(j == 0)
+    {
+        printf("NULL\n");
+    }
+    printf("List of borrowed books\n");
+    printf("\n");
+    temp = start;
+    while(temp != NULL)
+    {
+        if(strcmp(temp->username_member, "NULL") != 0)
+        {
+            printf("NAME BOOK:                          ");
+            SetConsoleTextAttribute(color, 12);
+            puts(temp->name);
+            SetConsoleTextAttribute(color, 7);
+            printf("NAME PUBLICATION:                   ");
+            SetConsoleTextAttribute(color, 12);
+            puts(temp->publication);
+            SetConsoleTextAttribute(color, 7);
+            printf("NAME AUTHOR:                        ");
+            SetConsoleTextAttribute(color, 12);
+            puts(temp->author);
+            SetConsoleTextAttribute(color, 7);
+            printf("YEAR OF PUBLICATION:                ");
+            SetConsoleTextAttribute(color, 12);
+            puts(temp->year);
+            SetConsoleTextAttribute(color, 7);
+            printf("BOOK REGISTERATION DATE:            ");
+            SetConsoleTextAttribute(color, 12);
+            puts(temp->date);
+            SetConsoleTextAttribute(color, 7);
+            printf("BOOK ID:                            ");
+            SetConsoleTextAttribute(color, 12);
+            puts(temp->id);
+            SetConsoleTextAttribute(color, 7);
+            printf("USER NAME OF THE EMPLOYEE:          ");
+            SetConsoleTextAttribute(color, 12);
+            puts(temp->username);
+            SetConsoleTextAttribute(color, 7);
+            printf("BOOK GENRE:                         ");
+            SetConsoleTextAttribute(color, 12);
+            puts(temp->genre);
+            SetConsoleTextAttribute(color, 7);
+            printf("USERNAME:                           ");
+            SetConsoleTextAttribute(color, 12);
+            puts(temp->username_member);
+            SetConsoleTextAttribute(color, 7);
+            printf("TRUST REGISTRATION DATE:            ");
+            SetConsoleTextAttribute(color, 12);
+            puts(temp->date_trust);
+            SetConsoleTextAttribute(color, 7);
+            printf("BOOK RATURN DATE:                   ");
+            SetConsoleTextAttribute(color, 12);
+            puts(temp->date_take);
+            SetConsoleTextAttribute(color, 7);
+            temp = temp->link;
+            printf("--------------------------------------------------------------------\n");
+            k++;
+        }
+        else
+        {
+            temp = temp->link;
+        }
+    }
+    if(k == 0)
+    {
+        printf("NULL\n");
+    }
+    temp = start;
+    while(temp != NULL)
+    {
+        struct book *next;
+        next = temp->link;
+        free(temp);
+        temp = next;
+    }
+    while(1)
+    {
+        scanf("%s", i);
+        if(strcmp(i, one) == 0)
+        {
+            report_Admin();
+        }
+        else
+        {
+            printf("Please enter one.\n");
+        }
+    }
+}
+report_Admin_list_book_3()
+{
+    system("cls");
+    char i[100];
+    FILE *fp;
+    char line[100], today[100];
+    int j = 0, k = 0;
+    struct book *start = NULL, *temp = NULL, *end = NULL;
+    HANDLE color = GetStdHandle(STD_OUTPUT_HANDLE);
+    fp = fopen("Book Profile.txt", "r");
+    while(1)
+    {
+        temp = malloc(sizeof(struct book));
+        if(fgets(line, sizeof(line), fp) == NULL)
+        {
+            break;
+        }
+        // ba estefade as strcspn \n ra peida va bejash \0 garar midahim.
+        line[strcspn(line, "\n")] = '\0';
+        strcpy(temp->name, line);
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->publication, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->author, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->year, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->date, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->id, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->username, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->genre, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->username_member, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->date_trust, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->date_take, line);
+        }
+        temp->link = NULL;
+        if(start == NULL)
+        {
+            start = temp;
+            end = temp;
+        }
+        else
+        {
+            end->link = temp;
+            end = temp;
+        }
+    }
+    fclose(fp);
+    date(today);
+    printf("                                                                    1.Back\n");
+    temp = start;
+    while(temp != NULL)
+    {
+        if(strcmp(today, temp->date_take) >= 0)
+        {
+            printf("NAME BOOK:                          ");
+            SetConsoleTextAttribute(color, 12);
+            puts(temp->name);
+            SetConsoleTextAttribute(color, 7);
+            printf("NAME PUBLICATION:                   ");
+            SetConsoleTextAttribute(color, 12);
+            puts(temp->publication);
+            SetConsoleTextAttribute(color, 7);
+            printf("NAME AUTHOR:                        ");
+            SetConsoleTextAttribute(color, 12);
+            puts(temp->author);
+            SetConsoleTextAttribute(color, 7);
+            printf("YEAR OF PUBLICATION:                ");
+            SetConsoleTextAttribute(color, 12);
+            puts(temp->year);
+            SetConsoleTextAttribute(color, 7);
+            printf("BOOK REGISTERATION DATE:            ");
+            SetConsoleTextAttribute(color, 12);
+            puts(temp->date);
+            SetConsoleTextAttribute(color, 7);
+            printf("BOOK ID:                            ");
+            SetConsoleTextAttribute(color, 12);
+            puts(temp->id);
+            SetConsoleTextAttribute(color, 7);
+            printf("USERNAME OF THE EMPLOYEE:           ");
+            SetConsoleTextAttribute(color, 12);
+            puts(temp->username);
+            SetConsoleTextAttribute(color, 7);
+            printf("BOOK GENRE:                         ");
+            SetConsoleTextAttribute(color, 12);
+            puts(temp->genre);
+            SetConsoleTextAttribute(color, 7);
+            printf("USERNAME:                           ");
+            SetConsoleTextAttribute(color, 12);
+            puts(temp->username_member);
+            SetConsoleTextAttribute(color, 7);
+            printf("TRUST REGISTRATION DATE:            ");
+            SetConsoleTextAttribute(color, 12);
+            puts(temp->date_trust);
+            SetConsoleTextAttribute(color, 7);
+            printf("BOOK RATURN DATE:                   ");
+            SetConsoleTextAttribute(color, 12);
+            puts(temp->date_take);
+            SetConsoleTextAttribute(color, 7);
+            temp = temp->link;
+            printf("--------------------------------------------------------------------\n");
+            k++;
+        }
+        else
+        {
+            temp = temp->link;
+        }
+    }
+    if(k == 0)
+    {
+        printf("NULL.\n");
+    }
+    temp = start;
+    while(temp != NULL)
+    {
+        struct book *next;
+        next = temp->link;
+        free(temp);
+        temp = next;
+    }
+    while(1)
+    {
+        scanf("%s", i);
+        if(strcmp(i, one) == 0)
+        {
+            report_Admin();
+        }
+        else
+        {
+            printf("Please enter one.\n");
+        }
+    }
+}
+void report_Admin_history_book(void)
+{
+    system("cls");
+    char i[100];
+    FILE *fp;
+    char line[100], today[100];
+    int j = 0;
+    struct my_book *start = NULL, *temp = NULL, *end = NULL;
+    fp = fopen("My Book.txt", "r");
+    while(1)
+    {
+        temp = malloc(sizeof(struct my_book));
+        if(fgets(line, sizeof(line), fp) == NULL)
+        {
+            break;
+        }
+        // ba estefade as strcspn \n ra peida va bejash \0 garar midahim.
+        line[strcspn(line, "\n")] = '\0';
+        strcpy(temp->user_name, line);
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->name, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->date_trust, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->date_take, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->id, line);
+        }
+        temp->link = NULL;
+        if(start == NULL)
+        {
+            start = temp;
+            end = temp;
+        }
+        else
+        {
+            end->link = temp;
+            end = temp;
+        }
+    }
+    fclose(fp);
+    printf("                                                                    1.Back\n");
+    printf("Please enter the book ID:\n");
+    scanf("%s", i);
+    temp = start;
+    while(temp != NULL)
+    {
+        if(strcmp(temp->id, i) == 0)
+        {
+            printf("NAME BOOK:                          ");
+            puts(temp->name);
+            printf("TRUST REGISTRATION DATE:            ");
+            puts(temp->date_trust);
+            printf("BOOK RATURN DATE:                   ");
+            puts(temp->date_take);
+            printf("BOOK ID:                            ");
+            puts(temp->id);
+            temp = temp->link;
+            printf("--------------------------------------------------------------------\n");
+            j++;
+        }
+        else
+        {
+            temp = temp->link;
+        }
+    }
+    if(j == 0)
+    {
+        printf("NULL\n");
+    }
+    temp = start;
+    while(temp != NULL)
+    {
+        struct my_book *next;
+        next = temp->link;
+        free(temp);
+        temp = next;
+    }
+    while(1)
+    {
+        scanf("%s", i);
+        if(strcmp(i, one) == 0)
+        {
+            report_Admin();
+        }
+        else
+        {
+            printf("Please enter one.\n");
+        }
+    }
+}
+void report_Admin_search(void)
+{
+    system("cls");
+    char i[100];
+    FILE *fp;
+    char line[100], emp[100];//employee = emp;
+    int j = 0, k = 0;
+    struct book *start = NULL, *temp = NULL, *end = NULL;
+    struct employee *start1 = NULL, *temp1 = NULL, *end1 = NULL;
+    fp = fopen("Book Profile.txt", "r");
+    while(1)
+    {
+        temp = malloc(sizeof(struct book));
+        if(fgets(line, sizeof(line), fp) == NULL)
+        {
+            break;
+        }
+        // ba estefade as strcspn \n ra peida va bejash \0 garar midahim.
+        line[strcspn(line, "\n")] = '\0';
+        strcpy(temp->name, line);
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->publication, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->author, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->year, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->date, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->id, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->username, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->genre, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->username_member, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->date_trust, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->date_take, line);
+        }
+        temp->link = NULL;
+        if(start == NULL)
+        {
+            start = temp;
+            end = temp;
+        }
+        else
+        {
+            end->link = temp;
+            end = temp;
+        }
+    }
+    fclose(fp);
+    fp = fopen("Employee Profile.txt", "r");
+    while(1)
+    {
+        temp1 = malloc(sizeof(struct employee));
+        if(fgets(line, sizeof(line), fp) == NULL)
+        {
+            break;
+        }
+        // ba estefade as strcspn \n ra peida va bejash \0 garar midahim.
+        line[strcspn(line, "\n")] = '\0';
+        strcpy(temp1->name, line);
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp1->family, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp1->date, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp1->phone, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp1->code_meli, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp1->email, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp1->username, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp1->password, line);
+        }
+        temp1->link = NULL;
+        if(start1 == NULL)
+        {
+            start1 = temp1;
+            end1 = temp1;
+        }
+        else
+        {
+            end1->link = temp1;
+            end1 = temp1;
+        }
+    }
+    fclose(fp);
+    printf("                                                                    1.Back\n");
+    printf("Please enter the employee's username:\n");
+    scanf("%s", emp);
+    if(strcmp(emp, one) == 0)
+    {
+        report_Admin();
+    }
+    temp1 = start1;
+    while(temp1 != NULL)
+    {
+        if(strcmp(temp1->username, emp) == 0)
+        {
+            break;
+        }
+        else
+        {
+            temp1 = temp1->link;
+        }
+    }
+    if(temp1 == NULL)
+    {
+        printf("There is no such employee.\n");
+        printf("1.Try again\n");
+        printf("2.Back\n");
+        while(1)
+        {
+            scanf("%s", i);
+            if(strcmp(i, one) == 0)
+            {
+                temp = start;
+                while(temp != NULL)
+                {
+                    struct book *next;
+                    next = temp->link;
+                    free(temp);
+                    temp = next;
+                }
+                temp1 = start1;
+                while(temp1 != NULL)
+                {
+                    struct employee *next1;
+                    next1 = temp1->link;
+                    free(temp1);
+                    temp1 = next1;
+                }
+                report_Admin_search();
+            }
+            else
+            {
+                if(strcmp(i, two) == 0)
+                {
+                    temp = start;
+                    while(temp != NULL)
+                    {
+                        struct book *next;
+                        next = temp->link;
+                        free(temp);
+                        temp = next;
+                    }
+                    temp1 = start1;
+                    while(temp1 != NULL)
+                    {
+                        struct employee *next1;
+                        next1 = temp1->link;
+                        free(temp1);
+                        temp1 = next1;
+                    }
+                    report_Admin();
+                }
+                else
+                {
+                    printf("Please enter 1 or 2.\n");
+                }
+            }
+        }
+    }
+    temp1 = start1;
+    while(temp1 != NULL)
+    {
+        struct employee *next1;
+        next1 = temp1->link;
+        free(temp1);
+        temp1 = next1;
+    }
+    temp = start;
+    while(temp != NULL)
+    {
+        if(strcmp(temp->username, emp) == 0)
+        {
+            printf("NAME BOOK:                          ");
+            puts(temp->name);
+            printf("NAME PUBLICATION:                   ");
+            puts(temp->publication);
+            printf("NAME AUTHOR:                        ");
+            puts(temp->author);
+            printf("YEAR OF PUBLICATION:                ");
+            puts(temp->year);
+            printf("BOOK ID:                            ");
+            puts(temp->id);
+            printf("BOOK GENRE:                         ");
+            puts(temp->genre);
+            temp = temp->link;
+            printf("--------------------------------------------------------------------\n");
+            j++;
+        }
+        else
+        {
+            temp = temp->link;
+        }
+    }
+    if(j == 0)
+    {
+        printf("NULL\n");
+    }
+    temp = start;
+    while(temp != NULL)
+    {
+        struct book *next;
         next = temp->link;
         free(temp);
         temp = next;
@@ -3081,7 +3962,6 @@ void Member_login(void)
     printf("Please enter your username: ");
     fflush(stdin);
     scanf("%s", user_name);
-    getchar();
     temp = start;
     while(temp != NULL)
     {
@@ -3136,6 +4016,7 @@ void Member_login(void)
         printf("\nPlease enter the your password:");
         while(j != 1)
         {
+            fflush(stdin);
             //inaja yek password az karbar gerefte mishavad
             scanf("%s", user_password);
             // va ba password karbar moghyese mishavad
