@@ -67,9 +67,17 @@ struct book{
     char id[10];
     char username[20];
     char genre[20];
-    char trust[20];
     struct book *link;
 };
+struct book_borrow{
+    char username[20];
+    char name[100];
+    char id[10];
+};
+struct employee *start1 = NULL, *temp1 = NULL, *end1 = NULL;
+struct member *start2 = NULL, *temp2 = NULL , *end2 = NULL;
+struct book *start3 = NULL, *temp3 = NULL, *end3 = NULL;
+struct book_borrow *start4 = NULL, *temp4 = NULL, *end4 = NULL;
 void main()
 {
     // in tabe vazife beroz resani tarikh ozviat ra darad.
@@ -225,6 +233,238 @@ void remainder(void)
         next = temp ->link;
         free(temp);
         temp = next;
+    }
+}
+void link_employee(void)
+{
+    char line[100];
+    FILE *fp;
+    fp = fopen("Employee Profile.txt", "r");
+    while(1)
+    {
+        temp1 = malloc(sizeof(struct employee));
+        if(fgets(line, sizeof(line), fp) == NULL)
+        {
+            break;
+        }
+        // ba estefade as strcspn \n ra peida va bejash \0 garar midahim.
+        line[strcspn(line, "\n")] = '\0';
+        strcpy(temp1->name, line);
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp1->family, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp1->date, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp1->phone, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp1->code_meli, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp1->email, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp1->username, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp1->password, line);
+        }
+        temp1->link = NULL;
+        if(start1 == NULL)
+        {
+            start1 = temp1;
+            end1 = temp1;
+        }
+        else
+        {
+            end1->link = temp1;
+            end1 = temp1;
+        }
+    }
+    fclose(fp);
+}
+void link_member(void)
+{
+    char line[100];
+    FILE *fp;
+    fp = fopen("Member Profile.txt", "r");
+    while(1)
+    {
+        temp2 = malloc(sizeof(struct member));
+        if(fgets(line, sizeof(line), fp) == NULL)
+        {
+            break;
+        }
+        // ba estefade as strcspn \n ra peida va bejash \0 garar midahim.
+        line[strcspn(line, "\n")] = '\0';
+        strcpy(temp2->name, line);
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp2->family, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp2->date, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp2->end_date, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp2->phone, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp2->code_meli, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp2->email, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp2->active, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp2->username, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp2->password, line);
+        }
+        temp2->link = NULL;
+        if(start2 == NULL)
+        {
+            start2 = temp2;
+            end2 = temp2;
+        }
+        else
+        {
+            end2->link = temp2;
+            end2 = temp2;
+        }
+    }
+    fclose(fp);
+}
+void link_book(void)
+{
+    char line[100];
+    FILE *fp;
+    fp = fopen("Book Profile.txt", "r");
+    while(1)
+    {
+        temp3 = malloc(sizeof(struct book));
+        if(fgets(line, sizeof(line), fp) == NULL)
+        {
+            break;
+        }
+        // ba estefade as strcspn \n ra peida va bejash \0 garar midahim.
+        line[strcspn(line, "\n")] = '\0';
+        strcpy(temp3->name, line);
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp3->publication, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp3->author, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp3->year, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp3->date, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp3->id, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp3->username, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp3->genre, line);
+        }
+        temp3->link = NULL;
+        if(start3 == NULL)
+        {
+            start3 = temp3;
+            end3 = temp3;
+        }
+        else
+        {
+            end3->link = temp3;
+            end3 = temp3;
+        }
+    }
+    fclose(fp);
+}
+void free_employee(void)
+{
+    while(temp1 != NULL)
+    {
+        struct employee *next;
+        next = temp1->link;
+        free(temp1);
+        temp1 = next;
+    }
+}
+void free_member(void)
+{
+    while(temp2 != NULL)
+    {
+        struct member *next;
+        next = temp2->link;
+        free(temp2);
+        temp2 = next;
+    }
+}
+void free_book(void)
+{
+    while(temp3 != NULL)
+    {
+        struct book *next;
+        next = temp3->link;
+        free(temp3);
+        temp3 = next;
     }
 }
 void menu(void)
@@ -1097,8 +1337,7 @@ void New_book(void)
     printf("Please enter the genre's book:");
     fflush(stdin);
     gets(start->genre);
-    printf("The hand of someone who is trusted:")
-    strcpy(start->trust, "NO ONE");
+    printf("The hand of someone who is trusted:");
     fputs(start->name,fp);
     fprintf(fp,"\n");
     fputs(start->publication,fp);
@@ -1115,8 +1354,6 @@ void New_book(void)
     fprintf(fp,"\n");
     fputs(start->genre,fp);
     fprintf(fp,"\n");
-    fputs(start->trust, fp);
-    fprintf(fp, "\n");
     system("cls");
     printf("The operation was successful.");
     fclose(fp);
@@ -2413,7 +2650,7 @@ void Member_login(void)
 {
     system("cls");
     int j = 0;
-    char user_name[20], user_password[20], i[100];
+    char user_name[20], user_password[20], i[100], save[20];
     struct member *start = NULL, *end = NULL, *temp = NULL;
     char line[100];
     FILE *fp;
@@ -2493,15 +2730,23 @@ void Member_login(void)
     {
         if(strcmp(temp->username, user_name) == 0)
         {
+            strcpy(save, temp->active);
             break;
         }
         temp = temp->link;
     }
     //agar ta akhar check anjam shavad va user name paida nashavad vared in shart mishavad
-    if(temp == NULL)
+    if((temp == NULL) || (strcmp(save, "Farmer")) == 0)
     {
         // print mishe ke user name vojod nadarad.
-        printf("This username doesn't exist.\n");
+        if(temp == NULL)
+        {
+            printf("This username doesn't exist.\n");
+        }
+        if(strcmp(save, "Farmer") == 0)
+        {
+            printf("You have been removed.\n");
+        }
         Sleep(1000);
         printf("1. to try again.\n");
         printf("2. back.\n");
@@ -2637,73 +2882,39 @@ void Member_menu(void)
 void register_trust(void)
 {
     system("cls");
-    struct book *start = NULL, *end = NULL, *temp = NULL;
-    system("cls");
-    char line[100] ,i[100];
+    char id[100];
+    int j = 0;
     FILE *fp;
-    fp = fopen("Book Profile.txt", "r");
-    while(1)
+    link_book();
+    printf("Please enter the book id: ");
+    scanf("%s", id);
+    while(temp3 != NULL)
     {
-        temp = malloc(sizeof(struct book));
-        if(fgets(line, sizeof(line), fp) == NULL)
+        if(strcmp(id, temp3->id) == 0)
         {
+            strcpy(start4->username ,ozve);
+            strcpy(start4->id, temp3->id);
+            strcpy(start4->name ,temp3 -> name);
+            j++;
             break;
         }
-        // ba estefade as strcspn \n ra peida va bejash \0 garar midahim.
-        line[strcspn(line, "\n")] = '\0';
-        strcpy(temp->name, line);
-        if(fgets(line, sizeof(line), fp) != NULL)
-        {
-            line[strcspn(line, "\n")] = '\0';
-            strcpy(temp->publication, line);
-        }
-        if(fgets(line, sizeof(line), fp) != NULL)
-        {
-            line[strcspn(line, "\n")] = '\0';
-            strcpy(temp->author, line);
-        }
-        if(fgets(line, sizeof(line), fp) != NULL)
-        {
-            line[strcspn(line, "\n")] = '\0';
-            strcpy(temp->year, line);
-        }
-        if(fgets(line, sizeof(line), fp) != NULL)
-        {
-            line[strcspn(line, "\n")] = '\0';
-            strcpy(temp->date, line);
-        }
-        if(fgets(line, sizeof(line), fp) != NULL)
-        {
-            line[strcspn(line, "\n")] = '\0';
-            strcpy(temp->id, line);
-        }
-        if(fgets(line, sizeof(line), fp) != NULL)
-        {
-            line[strcspn(line, "\n")] = '\0';
-            strcpy(temp->username, line);
-        }
-        if(fgets(line, sizeof(line), fp) != NULL)
-        {
-            line[strcspn(line, "\n")] = '\0';
-            strcpy(temp->genre, line);
-        }
-        if(fgets(line, sizeof(line), fp) != NULL)
-        {
-            line[strcspn(line, "\n")] = '\0';
-            strcpy(temp->trust, line);
-        }
-        temp->link = NULL;
-        if(start == NULL)
-        {
-            start = temp;
-            end = temp;
-        }
-        else
-        {
-            end->link = temp;
-            end = temp;
-        }
+        temp3 = temp3->link;
     }
-    fclose(fp);
-
+    if(j != 0)
+    {
+        printf("The operation was successful.");
+    }
+    else
+    {
+        printf("There is no book with this ID.");
+    }
+    fp = fopen("Book Borrow.txt", "w");
+    fputs(start4->username, fp);
+    fprintf(fp, "\n");
+    fputs(start4->id, fp);
+    fprintf(fp, "\n");
+    fputs(start4->name, fp);
+    fprintf(fp, "\n");
+    free(start4);
+    free_book();
 }
