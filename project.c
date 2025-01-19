@@ -100,6 +100,15 @@ struct my_book{
     char id[10];
     struct my_book *link;
 };
+struct return_book{
+    char user_name[20];
+    char name[100];
+    char date_trust[11];
+    char date_take[11];
+    char date_return[11];
+    char id[10];
+    struct return_book *link;
+};
 void main()
 {
     // in tabe vazife beroz resani tarikh ozviat ra darad.
@@ -297,20 +306,14 @@ void menu(void)
         if(strcmp(i , one) == 0)
         {
             Admin_Login();
-            // vaghti ramz dorost bashad vared menu Admin mishavad.
-            Admin_menu();
         }
         if(strcmp(i, two) == 0)
         {
             Staff_login();
-            // vaghti karmand login kone vared menu karmand mishim.
-            Staff_menu();
         }
         if(strcmp(i, three) == 0)
         {
             Member_login();
-            // vaghti ozve login kone vared menu ozve mishim.
-            Member_menu();
         }
         if(strcmp(i, four) == 0)
         {
@@ -327,7 +330,7 @@ void menu(void)
 void Admin_Login(void)
 {
     // dar ebteda har chi ke ghablan dar barname nevehte sode pak mishavad va bayad karbar login konad.
-    int i = 0;
+    char i[100];
     system("cls");
     char username[6];
     char defult_username[6]={'A','d','m','i','n'};
@@ -343,15 +346,16 @@ void Admin_Login(void)
         printf("Admin                                                         1. Back    2.exit");
         printf("\n");
         printf("Password: ");
-        while(i != 1)
+        while(1)
         {
             //inaja yek password az karbar gerefte mishavad
+            fflush(stdin);
             scanf("%s", password);
             // va ba password karbar moghyese mishavad
             if(strcmp(password, defult_password) == 0)
             {
                 //agar barabar bod az halghe kharej mishavad.
-                i++;
+                break;
             }
             else
             {
@@ -385,12 +389,12 @@ void Admin_Login(void)
         printf("2. back");
         while(1)
         {
-            scanf("%d", &i);
-            if(i = 1)
+            scanf("%s", i);
+            if(strcmp(i,one) == 0)
             {
                 Admin_Login();
             }
-            if(i = 2)
+            if(strcmp(i, two) == 0)
             {
                 menu();
             }
@@ -400,6 +404,8 @@ void Admin_Login(void)
             }
         }
     }
+    // vaghti ramz dorost bashad vared menu Admin mishavad.
+    Admin_menu();
 }
 void Admin_menu(void)
 {
@@ -1807,15 +1813,15 @@ report_Admin_list_book_3()
 void report_Admin_history_book(void)
 {
     system("cls");
-    char i[100];
+    char i[100], k[100];
     FILE *fp;
-    char line[100], today[100];
+    char line[100];
     int j = 0;
-    struct my_book *start = NULL, *temp = NULL, *end = NULL;
-    fp = fopen("My Book.txt", "r");
+    struct return_book *start = NULL, *temp = NULL, *end = NULL;
+    fp = fopen("Return Book.txt", "r");
     while(1)
     {
-        temp = malloc(sizeof(struct my_book));
+        temp = malloc(sizeof(struct return_book));
         if(fgets(line, sizeof(line), fp) == NULL)
         {
             break;
@@ -1841,6 +1847,11 @@ void report_Admin_history_book(void)
         if(fgets(line, sizeof(line), fp) != NULL)
         {
             line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->date_return, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
             strcpy(temp->id, line);
         }
         temp->link = NULL;
@@ -1857,19 +1868,33 @@ void report_Admin_history_book(void)
     }
     fclose(fp);
     printf("                                                                    1.Back\n");
-    printf("Please enter the book ID:\n");
-    scanf("%s", i);
+    printf("Please enter the Date:(For example 2025-01-02)\n");
+    while(1)
+    {
+        fflush(stdin);
+        scanf("%s", i);
+        fflush(stdin);
+        scanf("%s", k);
+        if(strlen(i) == 10 && strlen(k) == 10 && i[4] == '-' && k[4] == '-' && i[7] == '-' && k[7] == '-')
+        {
+            break;
+        }
+        else
+        {
+            printf("Please enter the dates as in the example.\n");
+        }
+    }
     temp = start;
     while(temp != NULL)
     {
-        if(strcmp(temp->id, i) == 0)
+        if(strcmp(i, temp->date_trust) >= 0 && strcmp(k, temp->date_trust) <= 0)
         {
             printf("NAME BOOK:                          ");
             puts(temp->name);
             printf("TRUST REGISTRATION DATE:            ");
             puts(temp->date_trust);
             printf("BOOK RATURN DATE:                   ");
-            puts(temp->date_take);
+            puts(temp->date_return);
             printf("BOOK ID:                            ");
             puts(temp->id);
             temp = temp->link;
@@ -2297,15 +2322,16 @@ void Staff_login(void)
         system("cls");
         printf("%s %s                                          1.back   2.exit\n", temp->name, temp->family);
         printf("\nPlease enter the your password:");
-        while(j != 1)
+        while(1)
         {
             //inaja yek password az karbar gerefte mishavad
+            fflush(stdin);
             scanf("%s", user_password);
             // va ba password karbar moghyese mishavad
             if(strcmp(user_password, temp->password) == 0)
             {
                 //agar barabar bod az halghe kharej mishavad.
-                j++;
+                break;
             }
             else
             {
@@ -2332,6 +2358,8 @@ void Staff_login(void)
             }
         }
     }
+    // vaghti karmand login kone vared menu karmand mishim.
+    Staff_menu();
 }
 void Staff_menu(void)
 {
@@ -4050,6 +4078,8 @@ void Member_login(void)
             }
         }
     }
+    // vaghti ozve login kone vared menu ozve mishim.
+    Member_menu();
 }
 void Member_menu(void)
 {
@@ -4344,8 +4374,8 @@ void register_trust(void)
 void register_return(void)
 {
     system("cls");
-    FILE *fp, *fp1;
-    char line[100], ID[100], i[100];
+    FILE *fp;
+    char line[100], ID[100], i[100], date_return[11];
     struct book *start = NULL, *temp = NULL, *end = NULL;
     fp = fopen("Book Profile.txt", "r");
     while(1)
@@ -4431,6 +4461,21 @@ void register_return(void)
         {
             if(strcmp(temp->username_member, ozve) == 0)
             {
+                fp = fopen("Return Book.txt", "a");
+                fputs(temp->username_member, fp);
+                fprintf(fp, "\n");
+                fputs(temp->name,fp);
+                fprintf(fp,"\n");
+                fputs(temp->date_trust, fp);
+                fprintf(fp, "\n");
+                fputs(temp->date_take, fp);
+                fprintf(fp, "\n");
+                date(date_return);
+                fputs(date_return, fp);
+                fprintf(fp, "\n");
+                fputs(temp->id, fp);
+                fprintf(fp,"\n");
+                fclose(fp);
                 strcpy(temp->username_member,"NULL");
                 strcpy(temp->date_take, "NULL");
                 strcpy(temp->date_trust, "NULL");
@@ -4750,11 +4795,11 @@ void my_return_book(void)
     FILE *fp;
     char line[100], i[100];
     int j = 0;
-    struct my_book *start = NULL, *temp = NULL, *end = NULL;
-    fp = fopen("My Book.txt", "r");
+    struct return_book *start = NULL, *temp = NULL, *end = NULL;
+    fp = fopen("Return Book.txt", "r");
     while(1)
     {
-        temp = malloc(sizeof(struct my_book));
+        temp = malloc(sizeof(struct return_book));
         if(fgets(line, sizeof(line), fp) == NULL)
         {
             break;
@@ -4776,6 +4821,11 @@ void my_return_book(void)
         {
             line[strcspn(line, "\n")] = '\0';
             strcpy(temp->date_take, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->date_return, line);
         }
         if(fgets(line, sizeof(line), fp) != NULL)
         {
@@ -4816,7 +4866,7 @@ void my_return_book(void)
     }
     while(temp != NULL)
     {
-        struct book *next;
+        struct return_book *next;
         next = temp ->link;
         free(temp);
         temp = next;
