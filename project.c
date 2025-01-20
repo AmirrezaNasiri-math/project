@@ -32,6 +32,8 @@ void Member_login(void);
 void Member_menu(void);
 void register_trust(void);
 void register_return(void);
+void books(void);
+void book_list_borrowing(void);
 char one[2] = {'1', '\0'}, two[2] = {'2', '\0'}, three[2] = {'3', '\0'}, four[2] = {'4', '\0'}, five[2] = {'5', '\0'}, six[2] = {'6', '\0'}, seven[2] = {'7', '\0'}, eight[2] = {'8', '\0'}, nine[2] = {'9', '\0'};
 char karmand[20], ozve[20];
 // ID_book baray shenase ketab ke har bar ketab jadid sabt mishe yeki behesh ezafe mishe.
@@ -2666,7 +2668,7 @@ void Member_menu(void)
                 {
                     if(strcmp(i, four) == 0)
                     {
-
+                        books();
                     }
                     else
                     {
@@ -3093,6 +3095,7 @@ void register_return(void)
             temp = temp -> link;
         }
     }
+    temp = start;
     while(temp != NULL)
     {
         struct book *next;
@@ -3120,6 +3123,163 @@ void register_return(void)
             {
                 printf("Please enter the number of above: \n");
             }
+        }
+    }
+}
+void books(void)
+{
+    system("cls");
+    char i[100];
+    printf("1. List of books available for borrowing.\n");
+    printf("2. List of books available in the library.\n");
+    printf("3. Back.\n");
+    printf("\n");
+    printf("Please Enter Your Choice:");
+    while(1)
+    {
+        scanf("%s", i);
+        if(strcmp(i, one) == 0)
+        {
+            book_list_borrowing();
+        }
+        else
+        {
+            if(strcmp(i, two) == 0)
+            {
+
+            }
+            else
+            {
+                if(strcmp(i, three) == 0)
+                {
+                    Member_menu();
+                }
+                else
+                {
+                    printf("Please enter the number of above :\n");
+                }
+            }
+        }
+    }
+}
+void book_list_borrowing(void)
+{
+    system("cls");
+    FILE *fp;
+    char line[100], i[100];
+    struct book *start = NULL, *temp = NULL, *end = NULL;
+    fp = fopen("Book Profile.txt", "r");
+    while(1)
+    {
+        temp = malloc(sizeof(struct book));
+        if(fgets(line, sizeof(line), fp) == NULL)
+        {
+            break;
+        }
+        // ba estefade as strcspn \n ra peida va bejash \0 garar midahim.
+        line[strcspn(line, "\n")] = '\0';
+        strcpy(temp->name, line);
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->publication, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->author, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->year, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->date, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->id, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->username, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->genre, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->username_member, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->date_trust, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->date_take, line);
+        }
+        temp->link = NULL;
+        if(start == NULL)
+        {
+            start = temp;
+            end = temp;
+        }
+        else
+        {
+            end->link = temp;
+            end = temp;
+        }
+    }
+    fclose(fp);
+    printf("                                                  1. Back\n");
+    temp = start;
+    while(temp != NULL)
+    {
+        if(strcmp(temp->username_member, "NULL") == 0)
+        {
+            printf("NAME'S BOOK:                        ");
+            puts(temp->name);
+            printf("NAME'S PUBLICATION:                 ");
+            puts(temp->publication);
+            printf("NAME'S AUTHOR:                      ");
+            puts(temp->author);
+            printf("ID:                                 ");
+            puts(temp->id);
+            printf("GENRE:                              ");
+            puts(temp->genre);
+            printf("--------------------------------------------------------------------\n");
+        }
+        temp = temp->link;
+    }
+    temp = start;
+    while(temp != NULL)
+    {
+        struct book *next;
+        next = temp ->link;
+        free(temp);
+        temp = next;
+    }
+    while(1)
+    {
+        scanf("%s", i);
+        if(strcmp(i, one) == 0)
+        {
+            books();
+        }
+        else
+        {
+            printf("Please enter one.\n");
         }
     }
 }
