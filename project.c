@@ -342,12 +342,12 @@ void Admin_Login(void)
     scanf("%s", username);
     if(strcmp(username, defult_username) == 0)
     {
-        system("cls");
-        printf("Admin                                                         1. Back    2.exit");
-        printf("\n");
-        printf("Password: ");
         while(1)
         {
+            system("cls");
+            printf("Admin                                                         1. Back    2.exit");
+            printf("\n");
+            printf("Password: ");
             //inaja yek password az karbar gerefte mishavad
             fflush(stdin);
             scanf("%s", password);
@@ -377,9 +377,11 @@ void Admin_Login(void)
                         printf("Password is false!");
                         printf("\n");
                         printf("Please enter again.");
+                        Sleep(3000);
                     }
                 }
             }
+
         }
     }
     else
@@ -1813,11 +1815,14 @@ report_Admin_list_book_3()
 void report_Admin_history_book(void)
 {
     system("cls");
-    char i[100], k[100];
+    char i[100], k[100], today[11];
     FILE *fp;
     char line[100];
     int j = 0;
+    HANDLE color = GetStdHandle(STD_OUTPUT_HANDLE);
     struct return_book *start = NULL, *temp = NULL, *end = NULL;
+    struct book *start1 = NULL, *end1 = NULL, *temp1 = NULL;
+    date(today);
     fp = fopen("Return Book.txt", "r");
     while(1)
     {
@@ -1867,6 +1872,80 @@ void report_Admin_history_book(void)
         }
     }
     fclose(fp);
+    fp = fopen("Book Profile.txt", "r");
+    while(1)
+    {
+        temp1 = malloc(sizeof(struct book));
+        if(fgets(line, sizeof(line), fp) == NULL)
+        {
+            break;
+        }
+        // ba estefade as strcspn \n ra peida va bejash \0 garar midahim.
+        line[strcspn(line, "\n")] = '\0';
+        strcpy(temp1->name, line);
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp1->publication, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp1->author, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp1->year, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp1->date, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp1->id, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp1->username, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp1->genre, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp1->username_member, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp1->date_trust, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp1->date_take, line);
+        }
+        temp1->link = NULL;
+        if(start1 == NULL)
+        {
+            start1 = temp1;
+            end1 = temp1;
+        }
+        else
+        {
+            end1->link = temp1;
+            end1 = temp1;
+        }
+    }
+    fclose(fp);
     printf("                                                                    1.Back\n");
     printf("Please enter the Date:(For example 2025-01-02)\n");
     while(1)
@@ -1887,7 +1966,7 @@ void report_Admin_history_book(void)
     temp = start;
     while(temp != NULL)
     {
-        if(strcmp(i, temp->date_trust) >= 0 && strcmp(k, temp->date_trust) <= 0)
+        if(strcmp(i, temp->date_trust) <= 0 && strcmp(k, temp->date_trust) >= 0)
         {
             printf("NAME BOOK:                          ");
             puts(temp->name);
@@ -1897,6 +1976,8 @@ void report_Admin_history_book(void)
             puts(temp->date_return);
             printf("BOOK ID:                            ");
             puts(temp->id);
+            printf("SOMEONE WHO BORROWED:               ");
+            puts(temp->user_name);
             temp = temp->link;
             printf("--------------------------------------------------------------------\n");
             j++;
@@ -1904,6 +1985,69 @@ void report_Admin_history_book(void)
         else
         {
             temp = temp->link;
+        }
+    }
+    temp1 = start1;
+    while(temp1 != NULL)
+    {
+        if(strcmp(i, temp1->date_trust) <= 0 && strcmp(k, temp1->date_trust) >= 0)
+        {
+            if(strcmp(temp1->date_take, today) <= 0)
+            {
+                printf("NAME BOOK:                          ");
+                SetConsoleTextAttribute(color, 12);
+                puts(temp1->name);
+                SetConsoleTextAttribute(color, 7);
+                printf("TRUST REGISTRATION DATE:            ");
+                SetConsoleTextAttribute(color, 12);
+                puts(temp1->date_trust);
+                SetConsoleTextAttribute(color, 7);
+                printf("BOOK RATURN DATE:                   ");
+                SetConsoleTextAttribute(color, 12);
+                printf("NULL\n");
+                SetConsoleTextAttribute(color, 7);
+                printf("BOOK ID:                            ");
+                SetConsoleTextAttribute(color, 12);
+                puts(temp1->id);
+                SetConsoleTextAttribute(color, 7);
+                printf("SOMEONE WHO BORROWED:               ");
+                SetConsoleTextAttribute(color, 12);
+                puts(temp1->username_member);
+                SetConsoleTextAttribute(color, 7);
+                temp1 = temp1->link;
+                printf("--------------------------------------------------------------------\n");
+                j++;
+            }
+            else
+            {
+                printf("NAME BOOK:                          ");
+                SetConsoleTextAttribute(color, 11);
+                puts(temp1->name);
+                SetConsoleTextAttribute(color, 7);
+                printf("TRUST REGISTRATION DATE:            ");
+                SetConsoleTextAttribute(color, 11);
+                puts(temp1->date_trust);
+                SetConsoleTextAttribute(color, 7);
+                printf("BOOK RATURN DATE:                   ");
+                SetConsoleTextAttribute(color, 11);
+                printf("NULL\n");
+                SetConsoleTextAttribute(color, 7);
+                printf("BOOK ID:                            ");
+                SetConsoleTextAttribute(color, 11);
+                puts(temp1->id);
+                SetConsoleTextAttribute(color, 7);
+                printf("SOMEONE WHO BORROWED:               ");
+                SetConsoleTextAttribute(color, 11);
+                puts(temp1->username_member);
+                SetConsoleTextAttribute(color, 7);
+                temp1 = temp1->link;
+                printf("--------------------------------------------------------------------\n");
+                j++;
+            }
+        }
+        else
+        {
+            temp1 = temp1->link;
         }
     }
     if(j == 0)
@@ -1917,6 +2061,14 @@ void report_Admin_history_book(void)
         next = temp->link;
         free(temp);
         temp = next;
+    }
+    temp1 = start1;
+    while(temp1 != NULL)
+    {
+        struct my_book *next1;
+        next1 = temp1->link;
+        free(temp1);
+        temp1 = next1;
     }
     while(1)
     {
@@ -2319,11 +2471,11 @@ void Staff_login(void)
     {
         //baray inke dar tol ejra barname username karmand ro dashtebashim.
         strcpy(karmand,temp->username);
-        system("cls");
-        printf("%s %s                                          1.back   2.exit\n", temp->name, temp->family);
-        printf("\nPlease enter the your password:");
         while(1)
         {
+            system("cls");
+            printf("%s %s                                          1.back   2.exit\n", temp->name, temp->family);
+            printf("\nPlease enter the your password:");
             //inaja yek password az karbar gerefte mishavad
             fflush(stdin);
             scanf("%s", user_password);
@@ -2353,6 +2505,7 @@ void Staff_login(void)
                         printf("Password is false!");
                         printf("\n");
                         printf("Please enter again.\n");
+                        Sleep(3000);
                     }
                 }
             }
@@ -4039,11 +4192,11 @@ void Member_login(void)
     {
         //baray inke dar tol ejra barname username karmand ro dashtebashim.
         strcpy(ozve,temp->username);
-        system("cls");
-        printf("%s %s                                          1.back   2.exit\n", temp->name, temp->family);
-        printf("\nPlease enter the your password:");
         while(j != 1)
         {
+            system("cls");
+            printf("%s %s                                          1.back   2.exit\n", temp->name, temp->family);
+            printf("\nPlease enter the your password:");
             fflush(stdin);
             //inaja yek password az karbar gerefte mishavad
             scanf("%s", user_password);
