@@ -38,7 +38,14 @@ void my_return_book(void);
 void books(void);
 void book_list_borrowing(void);
 void book_list(void);
-char one[2] = {'1', '\0'}, two[2] = {'2', '\0'}, three[2] = {'3', '\0'}, four[2] = {'4', '\0'}, five[2] = {'5', '\0'}, six[2] = {'6', '\0'}, seven[2] = {'7', '\0'}, eight[2] = {'8', '\0'}, nine[2] = {'9', '\0'};
+void setting_member(void);
+void Change_Password_Member(void);
+void Change_Email_Member(void);
+void Change_Phone_Member(void);
+void report_Admin(void);
+void report_list_member(void);
+void report_list_employee(void);
+char one[2] = {'1', '\0'}, two[2] = {'2', '\0'}, three[2] = {'3', '\0'}, four[2] = {'4', '\0'}, five[2] = {'5', '\0'}, six[2] = {'6', '\0'}, seven[2] = {'7', '\0'}, eight[2] = {'8', '\0'}, nine[2] = {'9', '\0'}, ten[2] = {'10', '\0'}, eleven[2] = {'11', '\0'};
 char karmand[20], ozve[20];
 // ID_book baray shenase ketab ke har bar ketab jadid sabt mishe yeki behesh ezafe mishe.
 // tarif sakhtar baray moshakhsat karmandan.
@@ -425,7 +432,7 @@ void Admin_menu(void)
         }
         if(strcmp(i, four) == 0)
         {
-
+            report_Admin();
         }
         if(strcmp(i, five) == 0)
         {
@@ -766,6 +773,532 @@ void delet_employee(void)
         else
         {
             printf("\nPlease enter 1.\n");
+        }
+    }
+}
+void report_Admin(void)
+{
+    system("cls");
+    char i[100];
+    printf("1.  List of member profiles");
+    printf("\n");
+    printf("2.  List of employee profiles");
+    printf("\n");
+    printf("3.  List of fired employees");
+    printf("\n");
+    printf("4.  List of all books");
+    printf("\n");
+    printf("5.  List of all books available for borrowing");
+    printf("\n");
+    printf("6.  List of all books currently on loan");
+    printf("\n");
+    printf("7.  List of books that are overdue for return");
+    printf("\n");
+    printf("8.  History of borrowing books");
+    printf("\n");
+    printf("9.  History of book registration in the library");
+    printf("\n");
+    printf("10. List of books registered in the library by a specific employee");
+    printf("\n");
+    printf("11. Back");
+    printf("\n");
+    printf("\n");
+    printf("Please Enter Your Choice:");
+    while(1)
+    {
+        scanf("%s", i);
+        if(strcmp(i, one) == 0)
+        {
+            report_list_member();
+        }
+        else
+        {
+            if(strcmp(i, two) == 0)
+            {
+                report_list_employee();
+            }
+            else
+            {
+                if(strcmp(i, three) == 0)
+                {
+
+                }
+                else
+                {
+                    if(strcmp(i, four) == 0)
+                    {
+                        delet_member();
+                    }
+                    else
+                    {
+                        if(strcmp(i, five) == 0)
+                        {
+                            New_book();
+                        }
+                        else
+                        {
+                            if(strcmp(i, six) == 0)
+                            {
+
+                            }
+                            else
+                            {
+                               if(strcmp(i, seven) == 0)
+                               {
+                                   setting_employee();
+                               }
+                               else
+                               {
+                                   if(strcmp(i , eleven) == 0)
+                                   {
+                                       Admin_menu();
+                                   }
+                                   else
+                                   {
+                                       printf("Please enter a number of above: ");
+                                   }
+                               }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+}
+void report_list_member(void)
+{
+    struct member *start = NULL, *end = NULL, *temp = NULL;
+    int j = 0;
+    system("cls");
+    char line[100], i[100];
+    FILE *fp;
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    fp = fopen("Member Profile.txt", "r");
+    while(1)
+    {
+        temp = malloc(sizeof(struct member));
+        if(fgets(line, sizeof(line), fp) == NULL)
+        {
+            break;
+        }
+        // ba estefade as strcspn \n ra peida va bejash \0 garar midahim.
+        line[strcspn(line, "\n")] = '\0';
+        strcpy(temp->name, line);
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->family, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->date, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->end_date, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->phone, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->code_meli, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->email, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->active, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->username, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->password, line);
+        }
+        temp->link = NULL;
+        if(start == NULL)
+        {
+            start = temp;
+            end = temp;
+        }
+        else
+        {
+            end->link = temp;
+            end = temp;
+        }
+    }
+    fclose(fp);
+    temp = start;
+    printf("                                                  1. Back\n");
+    while(temp != NULL)
+    {
+        if(strcmp(temp->active, "Active") == 0)
+        {
+            printf("FIRST NAME:                         ");
+            SetConsoleTextAttribute(hConsole, 10);
+            puts(temp->name);
+            SetConsoleTextAttribute(hConsole, 7);
+            printf("LAST NAME:                          ");
+            SetConsoleTextAttribute(hConsole, 10);
+            puts(temp->family);
+            SetConsoleTextAttribute(hConsole, 7);
+            printf("REGISTRATION DATE:                  ");
+            SetConsoleTextAttribute(hConsole, 10);
+            puts(temp->date);
+            SetConsoleTextAttribute(hConsole, 7);
+            printf("MEMBERSHIP EXPIRATION DATE:         ");
+            SetConsoleTextAttribute(hConsole, 10);
+            puts(temp->end_date);
+            SetConsoleTextAttribute(hConsole, 7);
+            printf("PHONE NUMBER:                       ");
+            SetConsoleTextAttribute(hConsole, 10);
+            puts(temp->phone);
+            SetConsoleTextAttribute(hConsole, 7);
+            printf("NATIONAL CODE:                      ");
+            SetConsoleTextAttribute(hConsole, 10);
+            puts(temp->code_meli);
+            SetConsoleTextAttribute(hConsole, 7);
+            printf("EMAIL:                              ");
+            SetConsoleTextAttribute(hConsole, 10);
+            puts(temp->email);
+            SetConsoleTextAttribute(hConsole, 7);
+            printf("STATUS:                             ");
+            SetConsoleTextAttribute(hConsole, 10);
+            puts(temp->active);
+            SetConsoleTextAttribute(hConsole, 7);
+            printf("USERNAME:                           ");
+            SetConsoleTextAttribute(hConsole, 10);
+            puts(temp->username);
+            SetConsoleTextAttribute(hConsole, 7);
+            printf("PASSWORD:                           ");
+            SetConsoleTextAttribute(hConsole, 10);
+            puts(temp->password);
+            SetConsoleTextAttribute(hConsole, 7);
+        }
+        if(strcmp(temp->active, "Inactive") == 0)
+        {
+            printf("FIRST NAME:                         ");
+            SetConsoleTextAttribute(hConsole, 12);
+            puts(temp->name);
+            SetConsoleTextAttribute(hConsole, 7);
+            printf("LAST NAME:                          ");
+            SetConsoleTextAttribute(hConsole, 12);
+            puts(temp->family);
+            SetConsoleTextAttribute(hConsole, 7);
+            printf("REGISTRATION DATE:                  ");
+            SetConsoleTextAttribute(hConsole, 12);
+            puts(temp->date);
+            SetConsoleTextAttribute(hConsole, 7);
+            printf("MEMBERSHIP EXPIRATION DATE:         ");
+            SetConsoleTextAttribute(hConsole, 12);
+            puts(temp->end_date);
+            SetConsoleTextAttribute(hConsole, 7);
+            printf("PHONE NUMBER:                       ");
+            SetConsoleTextAttribute(hConsole, 12);
+            puts(temp->phone);
+            SetConsoleTextAttribute(hConsole, 7);
+            printf("NATIONAL CODE:                      ");
+            SetConsoleTextAttribute(hConsole, 12);
+            puts(temp->code_meli);
+            SetConsoleTextAttribute(hConsole, 7);
+            printf("EMAIL:                              ");
+            SetConsoleTextAttribute(hConsole, 12);
+            puts(temp->email);
+            SetConsoleTextAttribute(hConsole, 7);
+            printf("STATUS:                             ");
+            SetConsoleTextAttribute(hConsole, 12);
+            puts(temp->active);
+            SetConsoleTextAttribute(hConsole, 7);
+            printf("USERNAME:                           ");
+            SetConsoleTextAttribute(hConsole, 12);
+            puts(temp->username);
+            SetConsoleTextAttribute(hConsole, 7);
+            printf("PASSWORD:                           ");
+            SetConsoleTextAttribute(hConsole, 12);
+            puts(temp->password);
+            SetConsoleTextAttribute(hConsole, 7);
+        }
+        if(strcmp(temp->active, "Farmer") == 0)
+        {
+            printf("FIRST NAME:                         ");
+            puts(temp->name);
+            printf("LAST NAME:                          ");
+            puts(temp->family);
+            printf("REGISTRATION DATE:                  ");
+            puts(temp->date);
+            printf("MEMBERSHIP EXPIRATION DATE:         ");
+            puts(temp->end_date);
+            printf("PHONE NUMBER:                       ");
+            puts(temp->phone);
+            printf("NATIONAL CODE:                      ");
+            puts(temp->code_meli);
+            printf("EMAIL:                              ");
+            puts(temp->email);
+            printf("STATUS:                             ");
+            puts(temp->active);
+            printf("USERNAME:                           ");
+            puts(temp->username);
+            printf("PASSWORD:                           ");
+            puts(temp->password);
+        }
+        printf("--------------------------------------------------------------------\n");
+        temp = temp->link;
+    }
+    temp = start;
+    while(temp != NULL)
+    {
+        struct member *next;
+        next = temp->link;
+        free(temp);
+        temp = next;
+    }
+    while(1)
+    {
+        scanf("%s", i);
+        if(strcmp(i, one) == 0)
+        {
+            report_Admin();
+        }
+        else
+        {
+            printf("Please enter one.\n");
+        }
+    }
+}
+void report_list_employee(void)
+{
+    system("cls");
+    struct employee *start = NULL, *end = NULL, *temp = NULL;
+    char line[100], i[100];
+    FILE *fp;
+    HANDLE color = GetStdHandle(STD_OUTPUT_HANDLE);
+    fp = fopen("Employee Profile.txt", "r");
+    while(1)
+    {
+        temp = malloc(sizeof(struct employee));
+        if(fgets(line, sizeof(line), fp) == NULL)
+        {
+            break;
+        }
+        // ba estefade as strcspn \n ra peida va bejash \0 garar midahim.
+        line[strcspn(line, "\n")] = '\0';
+        strcpy(temp->name, line);
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->family, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->date, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->phone, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->code_meli, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->email, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->username, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->password, line);
+        }
+        temp->link = NULL;
+        if(start == NULL)
+        {
+            start = temp;
+            end = temp;
+        }
+        else
+        {
+            end->link = temp;
+            end = temp;
+        }
+    }
+    fclose(fp);
+    printf("                                                  1. Back\n");
+    printf("List of active employees\n");
+    temp = start;
+    while(temp != NULL)
+    {
+        printf("FIRST NAME:                         ");
+        puts(temp->name);
+        printf("LAST NAME:                          ");
+        puts(temp->family);
+        printf("REGISTRATION DATE:                  ");
+        puts(temp->date);
+        printf("PHONE NUMBER:                       ");
+        puts(temp->phone);
+        printf("NATIONAL CODE:                      ");
+        puts(temp->code_meli);
+        printf("EMAIL:                              ");
+        puts(temp->email);
+        printf("USERNAME:                           ");
+        puts(temp->username);
+        printf("PASSWORD:                           ");
+        puts(temp->password);
+        temp = temp->link;
+        printf("--------------------------------------------------------------------\n");
+    }
+    temp = start;
+    while(temp != NULL)
+    {
+        struct employee *next;
+        next = temp->link;
+        free(temp);
+        temp = next;
+    }
+    fp = fopen("Deleted Employee Profile.txt", "r");
+    while(1)
+    {
+        temp = malloc(sizeof(struct employee));
+        if(fgets(line, sizeof(line), fp) == NULL)
+        {
+            break;
+        }
+        // ba estefade as strcspn \n ra peida va bejash \0 garar midahim.
+        line[strcspn(line, "\n")] = '\0';
+        strcpy(temp->name, line);
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->family, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->date, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->phone, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->code_meli, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->email, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->username, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->password, line);
+        }
+        temp->link = NULL;
+        if(start == NULL)
+        {
+            start = temp;
+            end = temp;
+        }
+        else
+        {
+            end->link = temp;
+            end = temp;
+        }
+    }
+    fclose(fp);
+    printf("List of");
+    SetConsoleTextAttribute(color, 12);
+    printf(" inactive ");
+    SetConsoleTextAttribute(color, 7);
+    printf("employees\n");
+    temp = start;
+    while(temp != NULL)
+    {
+        printf("FIRST NAME:                         ");
+        SetConsoleTextAttribute(color, 12);
+        puts(temp->name);
+        SetConsoleTextAttribute(color, 7);
+        printf("LAST NAME:                          ");
+        SetConsoleTextAttribute(color, 12);
+        puts(temp->family);
+        SetConsoleTextAttribute(color, 7);
+        printf("REGISTRATION DATE:                  ");
+        SetConsoleTextAttribute(color, 12);
+        puts(temp->date);
+        SetConsoleTextAttribute(color, 7);
+        printf("PHONE NUMBER:                       ");
+        SetConsoleTextAttribute(color, 12);
+        puts(temp->phone);
+        SetConsoleTextAttribute(color, 7);
+        printf("NATIONAL CODE:                      ");
+        SetConsoleTextAttribute(color, 12);
+        puts(temp->code_meli);
+        SetConsoleTextAttribute(color, 7);
+        printf("EMAIL:                              ");
+        SetConsoleTextAttribute(color, 12);
+        puts(temp->email);
+        SetConsoleTextAttribute(color, 7);
+        printf("USERNAME:                           ");
+        SetConsoleTextAttribute(color, 12);
+        puts(temp->username);
+        SetConsoleTextAttribute(color, 7);
+        printf("PASSWORD:                           ");
+        SetConsoleTextAttribute(color, 12);
+        puts(temp->password);
+        SetConsoleTextAttribute(color, 7);
+        temp = temp->link;
+        printf("--------------------------------------------------------------------\n");
+    }
+    temp = start;
+    while(temp != NULL)
+    {
+        struct employee *next;
+        next = temp->link;
+        free(temp);
+        temp = next;
+    }
+    while(1)
+    {
+        scanf("%s", i);
+        if(strcmp(i, one) == 0)
+        {
+            report_Admin();
+        }
+        else
+        {
+            printf("Please enter one.\n");
         }
     }
 }
@@ -1913,7 +2446,7 @@ void Change_Password(void)
     system("cls");
     struct employee *start = NULL, *end = NULL, *temp = NULL;
     system("cls");
-    char line[100], Ramz[20], i[100];
+    char line[100], i[100];
     FILE *fp;
     fp = fopen("Employee Profile.txt", "r");
     while(1)
@@ -2040,7 +2573,7 @@ void Change_Email(void)
 {
     system("cls");
     struct employee *start = NULL, *end = NULL, *temp = NULL;
-    char line[100], Ramz[20], i[100];
+    char line[100], i[100];
     FILE *fp;
     fp = fopen("Employee Profile.txt", "r");
     while(1)
@@ -2167,7 +2700,7 @@ void Change_Phone(void)
 {
     system("cls");
     struct employee *start = NULL, *end = NULL, *temp = NULL;
-    char line[100], Ramz[20], i[100];
+    char line[100], i[100];
     FILE *fp;
     fp = fopen("Employee Profile.txt", "r");
     while(1)
@@ -2233,7 +2766,7 @@ void Change_Phone(void)
     {
         if(strcmp(temp->username, karmand) == 0)
         {
-            printf("Please enter the New password:                              1.Back\n");
+            printf("Please enter the New number phone:                              1.Back\n");
             scanf("%s", temp->phone);
             if(strcmp(temp->phone, one) == 0)
             {
@@ -2548,6 +3081,7 @@ void Member_login(void)
     printf("Please enter your username: ");
     fflush(stdin);
     scanf("%s", user_name);
+    getchar();
     temp = start;
     while(temp != NULL)
     {
@@ -2578,7 +3112,7 @@ void Member_login(void)
             scanf("%s", i);
             if(strcmp(i, one) == 0)
             {
-                Staff_login();
+                Member_login();
             }
             else
             {
@@ -2686,7 +3220,7 @@ void Member_menu(void)
                     {
                         if(strcmp(i, five) == 0)
                         {
-
+                            setting_member();
                         }
                         else
                         {
@@ -3269,14 +3803,20 @@ void my_unreturn_book(void)
         {
             if(strcmp(today, temp->date_take) > 0)
             {
-                SetConsoleTextAttribute(hConsole, FOREGROUND_RED | FOREGROUND_INTENSITY);
                 printf("NAME'S BOOK:                        ");
+                SetConsoleTextAttribute(hConsole, 12);
                 puts(temp->name);
+                SetConsoleTextAttribute(hConsole, 7);
                 printf("ID:                                 ");
+                SetConsoleTextAttribute(hConsole, 12);
                 puts(temp->id);
+                SetConsoleTextAttribute(hConsole, 7);
                 printf("TRUST REGISTRATION DATE:            ");
+                SetConsoleTextAttribute(hConsole, 12);
                 puts(temp->date_trust);
+                SetConsoleTextAttribute(hConsole, 7);
                 printf("BOOK RETURN DATE:                   ");
+                SetConsoleTextAttribute(hConsole, 12);
                 puts(temp->date_take);
                 SetConsoleTextAttribute(hConsole, 7);
                 printf("--------------------------------------------------------------------\n");
@@ -3685,6 +4225,465 @@ void book_list(void)
         else
         {
             printf("Please enter one.\n");
+        }
+    }
+}
+void setting_member(void)
+{
+    system("cls");
+    char i[100];
+    printf("%s\n", ozve);
+    printf("\n1. Change Password\n");
+    printf("2. Change Email\n");
+    printf("3. Change Phone Number\n");
+    printf("4. Back\n");
+    printf("\n");
+    printf("Please Enter Your Choice:");
+    while(1)
+    {
+        scanf("%s", i);
+        if(strcmp(i, one) == 0)
+        {
+            Change_Password_Member();
+        }
+        if(strcmp(i, two) == 0)
+        {
+            Change_Email_Member();
+        }
+        if(strcmp(i , three) == 0)
+        {
+            Change_Phone_Member();
+        }
+        if(strcmp(i, four) == 0)
+        {
+            Member_menu();
+        }
+        else
+        {
+            printf("Please enter number of above:\n");
+        }
+    }
+}
+void Change_Password_Member(void)
+{
+    system("cls");
+    struct member *start = NULL, *end = NULL, *temp = NULL;
+    char line[100], i[100];
+    FILE *fp;
+    fp = fopen("Member Profile.txt", "r");
+    while(1)
+    {
+        temp = malloc(sizeof(struct member));
+        if(fgets(line, sizeof(line), fp) == NULL)
+        {
+            break;
+        }
+        // ba estefade as strcspn \n ra peida va bejash \0 garar midahim.
+        line[strcspn(line, "\n")] = '\0';
+        strcpy(temp->name, line);
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->family, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->date, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->end_date, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->phone, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->code_meli, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->email, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->active, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->username, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->password, line);
+        }
+        temp->link = NULL;
+        if(start == NULL)
+        {
+            start = temp;
+            end = temp;
+        }
+        else
+        {
+            end->link = temp;
+            end = temp;
+        }
+    }
+    fclose(fp);
+    temp = start;
+    while(temp != NULL)
+    {
+        if(strcmp(temp->username, ozve) == 0)
+        {
+            printf("Please enter the New password:                              1.Back\n");
+            scanf("%s", temp->password);
+            if(strcmp(temp->password, one) == 0)
+            {
+                setting_member();
+            }
+        }
+        temp = temp->link;
+    }
+    temp = start;
+    fp = fopen("Member Profile.txt", "w");
+    while(temp != NULL)
+    {
+        fputs(temp->name,fp);
+        fprintf(fp, "\n");
+        fputs(temp->family,fp);
+        fprintf(fp, "\n");
+        fputs(temp->date, fp);
+        fprintf(fp, "\n");
+        fputs(temp->end_date, fp);
+        fprintf(fp, "\n");
+        fputs(temp->phone,fp);
+        fprintf(fp, "\n");
+        fputs(temp->code_meli,fp);
+        fprintf(fp, "\n");
+        fputs(temp->email,fp);
+        fprintf(fp, "\n");
+        fputs(temp->active, fp);
+        fprintf(fp, "\n");
+        fputs(temp->username,fp);
+        fprintf(fp, "\n");
+        fputs(temp->password,fp);
+        fprintf(fp, "\n");
+        temp = temp->link;
+    }
+    fclose(fp);
+    temp = start;
+    while(temp != NULL)
+    {
+        struct member *next;
+        next = temp ->link;
+        free(temp);
+        temp = next;
+    }
+    system("cls");
+    printf("The operation was successful.\n");
+    Sleep(1000);
+    printf("1. Back\n");
+    while(1)
+    {
+        scanf("%s", i);
+        if(strcmp(i, one) == 0)
+        {
+            setting_member();
+        }
+        else
+        {
+            printf("Please enter 1.\n");
+        }
+    }
+}
+void Change_Email_Member(void)
+{
+    system("cls");
+    struct member *start = NULL, *end = NULL, *temp = NULL;
+    char line[100], i[100];
+    FILE *fp;
+    fp = fopen("Member Profile.txt", "r");
+    while(1)
+    {
+        temp = malloc(sizeof(struct member));
+        if(fgets(line, sizeof(line), fp) == NULL)
+        {
+            break;
+        }
+        // ba estefade as strcspn \n ra peida va bejash \0 garar midahim.
+        line[strcspn(line, "\n")] = '\0';
+        strcpy(temp->name, line);
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->family, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->date, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->end_date, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->phone, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->code_meli, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->email, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->active, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->username, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->password, line);
+        }
+        temp->link = NULL;
+        if(start == NULL)
+        {
+            start = temp;
+            end = temp;
+        }
+        else
+        {
+            end->link = temp;
+            end = temp;
+        }
+    }
+    fclose(fp);
+    temp = start;
+    while(temp != NULL)
+    {
+        if(strcmp(temp->username, ozve) == 0)
+        {
+            printf("Please enter the New email:                              1.Back\n");
+            scanf("%s", temp->email);
+            if(strcmp(temp->email, one) == 0)
+            {
+                setting_member();
+            }
+        }
+        temp = temp->link;
+    }
+    temp = start;
+    fp = fopen("Member Profile.txt", "w");
+    while(temp != NULL)
+    {
+        fputs(temp->name,fp);
+        fprintf(fp, "\n");
+        fputs(temp->family,fp);
+        fprintf(fp, "\n");
+        fputs(temp->date, fp);
+        fprintf(fp, "\n");
+        fputs(temp->end_date, fp);
+        fprintf(fp, "\n");
+        fputs(temp->phone,fp);
+        fprintf(fp, "\n");
+        fputs(temp->code_meli,fp);
+        fprintf(fp, "\n");
+        fputs(temp->email,fp);
+        fprintf(fp, "\n");
+        fputs(temp->active, fp);
+        fprintf(fp, "\n");
+        fputs(temp->username,fp);
+        fprintf(fp, "\n");
+        fputs(temp->password,fp);
+        fprintf(fp, "\n");
+        temp = temp->link;
+    }
+    fclose(fp);
+    temp = start;
+    while(temp != NULL)
+    {
+        struct member *next;
+        next = temp ->link;
+        free(temp);
+        temp = next;
+    }
+    system("cls");
+    printf("The operation was successful.\n");
+    Sleep(1000);
+    printf("1. Back\n");
+    while(1)
+    {
+        scanf("%s", i);
+        if(strcmp(i, one) == 0)
+        {
+            setting_member();
+        }
+        else
+        {
+            printf("Please enter 1.\n");
+        }
+    }
+}
+void Change_Phone_Member(void)
+{
+    system("cls");
+    struct member *start = NULL, *end = NULL, *temp = NULL;
+    char line[100], i[100];
+    FILE *fp;
+    fp = fopen("Member Profile.txt", "r");
+    while(1)
+    {
+        temp = malloc(sizeof(struct member));
+        if(fgets(line, sizeof(line), fp) == NULL)
+        {
+            break;
+        }
+        // ba estefade as strcspn \n ra peida va bejash \0 garar midahim.
+        line[strcspn(line, "\n")] = '\0';
+        strcpy(temp->name, line);
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->family, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->date, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->end_date, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->phone, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->code_meli, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->email, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->active, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->username, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->password, line);
+        }
+        temp->link = NULL;
+        if(start == NULL)
+        {
+            start = temp;
+            end = temp;
+        }
+        else
+        {
+            end->link = temp;
+            end = temp;
+        }
+    }
+    fclose(fp);
+    temp = start;
+    while(temp != NULL)
+    {
+        if(strcmp(temp->username, ozve) == 0)
+        {
+            printf("Please enter the New number phone:                              1.Back\n");
+            scanf("%s", temp->phone);
+            if(strcmp(temp->phone, one) == 0)
+            {
+                setting_member();
+            }
+        }
+        temp = temp->link;
+    }
+    temp = start;
+    fp = fopen("Member Profile.txt", "w");
+    while(temp != NULL)
+    {
+        fputs(temp->name,fp);
+        fprintf(fp, "\n");
+        fputs(temp->family,fp);
+        fprintf(fp, "\n");
+        fputs(temp->date, fp);
+        fprintf(fp, "\n");
+        fputs(temp->end_date, fp);
+        fprintf(fp, "\n");
+        fputs(temp->phone,fp);
+        fprintf(fp, "\n");
+        fputs(temp->code_meli,fp);
+        fprintf(fp, "\n");
+        fputs(temp->email,fp);
+        fprintf(fp, "\n");
+        fputs(temp->active, fp);
+        fprintf(fp, "\n");
+        fputs(temp->username,fp);
+        fprintf(fp, "\n");
+        fputs(temp->password,fp);
+        fprintf(fp, "\n");
+        temp = temp->link;
+    }
+    fclose(fp);
+    temp = start;
+    while(temp != NULL)
+    {
+        struct member *next;
+        next = temp ->link;
+        free(temp);
+        temp = next;
+    }
+    system("cls");
+    printf("The operation was successful.\n");
+    Sleep(1000);
+    printf("1. Back\n");
+    while(1)
+    {
+        scanf("%s", i);
+        if(strcmp(i, one) == 0)
+        {
+            setting_member();
+        }
+        else
+        {
+            printf("Please enter 1.\n");
         }
     }
 }
