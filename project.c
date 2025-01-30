@@ -7,6 +7,12 @@ void date(char datestr[11]);
 void validity(char val_date[11]);
 void validity_book(char val_date[11]);
 void remainder(void);
+int check_code_meli_Staff(char code[11]);
+int check_name_Staff(char name[20]);
+int check_phone_Staff(char phone[12]);
+int Check_email_Staff(char email[40]);
+int check_password_Staff(char password[20]);
+int Check_username_Staff(char username[20]);
 void menu(void);
 void Admin_Login(void);
 void Admin_menu(void);
@@ -53,6 +59,8 @@ void report_Admin_search(void);
 void report_Staff(void);
 void report_Staff_list_member(void);
 void report_Staff_list_book(void);
+void report_Staff_history_book(void);
+void report_Staff_history_member(void);
 void report_Staff_list_book_2(void);
 char one[2] = {'1', '\0'}, two[2] = {'2', '\0'}, three[2] = {'3', '\0'}, four[2] = {'4', '\0'}, five[2] = {'5', '\0'}, six[2] = {'6', '\0'}, seven[2] = {'7', '\0'}, eight[2] = {'8', '\0'}, nine[2] = {'9', '\0'}, ten[2] = {'10', '\0'}, eleven[2] = {'11', '\0'};
 char karmand[20], ozve[20];
@@ -161,7 +169,6 @@ void remainder(void)
     FILE *fp;
     fp = fopen("Member Profile.txt", "r");
     date(date_today);
-    puts(date_today);
     while(1)
     {
         temp = malloc(sizeof(struct member));
@@ -284,6 +291,676 @@ void remainder(void)
         free(temp);
         temp = next;
     }
+}
+int check_code_meli_Staff(char code[11])
+{
+    struct employee *start = NULL, *temp = NULL, *end = NULL;
+    char line[100], i[100];
+    FILE *fp;
+    int j;
+    fp = fopen("Employee Profile.txt", "r");
+    while(1)
+    {
+        temp = malloc(sizeof(struct employee));
+        if(fgets(line, sizeof(line), fp) == NULL)
+        {
+            break;
+        }
+        // ba estefade as strcspn \n ra peida va bejash \0 garar midahim.
+        line[strcspn(line, "\n")] = '\0';
+        strcpy(temp->name, line);
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->family, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->date, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->phone, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->code_meli, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->email, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->username, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->password, line);
+        }
+        temp->link = NULL;
+        if(start == NULL)
+        {
+            start = temp;
+            end = temp;
+        }
+        else
+        {
+            end->link = temp;
+            end = temp;
+        }
+    }
+    fclose(fp);
+    temp = start;
+    if(strlen(code) == 10)
+    {
+        while(temp != NULL)
+        {
+            if(strcmp(temp->code_meli, code) == 0)
+            {
+                temp = start;
+                while(temp != NULL)
+                {
+                    struct employee *next;
+                    next = temp ->link;
+                    free(temp);
+                    temp = next;
+                }
+                return 0;
+            }
+            else
+            {
+                temp = temp->link;
+            }
+        }
+        if(temp == NULL)
+        {
+            for(j = 0; j <= 9; j++)
+            {
+                if(j == 0)
+                {
+                    if('1' <= code[j] && code[j] <= '9')
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        temp = start;
+                        while(temp != NULL)
+                        {
+                            struct employee *next;
+                            next = temp ->link;
+                            free(temp);
+                            temp = next;
+                        }
+                        return 0;
+                    }
+                }
+                else
+                {
+                    if('0' <= code[j] && code[j] <= '9')
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        temp = start;
+                        while(temp != NULL)
+                        {
+                            struct employee *next;
+                            next = temp ->link;
+                            free(temp);
+                            temp = next;
+                        }
+                        return 0;
+                    }
+                }
+            }
+            temp = start;
+            while(temp != NULL)
+            {
+                struct employee *next;
+                next = temp ->link;
+                free(temp);
+                temp = next;
+            }
+            return 1;
+        }
+    }
+    else
+    {
+        temp = start;
+        while(temp != NULL)
+        {
+            struct employee *next;
+            next = temp ->link;
+            free(temp);
+            temp = next;
+        }
+        return 0;
+    }
+}
+int check_name_Staff(char name[20])
+{
+    int i;
+    for(i = 1 ; i <= strlen(name) - 1; i++)
+    {
+        if('A' <= name[0] && name[0] <= 'Z')
+        {
+            if( 'a' <= name[i] <= 'z')
+            {
+                return 1;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+        else
+            return 0;
+    }
+}
+int check_phone_Staff(char phone[12])
+{
+    struct employee *start = NULL, *temp = NULL, *end = NULL;
+    char line[100];
+    FILE *fp;
+    int i;
+    fp = fopen("Employee Profile.txt", "r");
+    while(1)
+    {
+        temp = malloc(sizeof(struct employee));
+        if(fgets(line, sizeof(line), fp) == NULL)
+        {
+            break;
+        }
+        // ba estefade as strcspn \n ra peida va bejash \0 garar midahim.
+        line[strcspn(line, "\n")] = '\0';
+        strcpy(temp->name, line);
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->family, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->date, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->phone, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->code_meli, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->email, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->username, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->password, line);
+        }
+        temp->link = NULL;
+        if(start == NULL)
+        {
+            start = temp;
+            end = temp;
+        }
+        else
+        {
+            end->link = temp;
+            end = temp;
+        }
+    }
+    fclose(fp);
+    temp = start;
+    while(temp != NULL)
+    {
+        if(strcmp(temp->phone, phone) == 0)
+        {
+            temp = start;
+            while(temp != NULL)
+            {
+                struct employee *next;
+                next = temp ->link;
+                free(temp);
+                temp = next;
+            }
+            return 0;
+        }
+        else
+        {
+            temp = temp->link;
+        }
+    }
+    if(strlen(phone) == 11)
+    {
+        if(phone[0] == '0' && phone[1] == '9')
+        {
+            for(i = 2 ; i <= 10; i++)
+            {
+                if(phone[i] <= '9' && phone[i] >= '0')
+                {
+                    continue;
+                }
+                else
+                {
+                    temp = start;
+                    while(temp != NULL)
+                    {
+                        struct employee *next;
+                        next = temp ->link;
+                        free(temp);
+                        temp = next;
+                    }
+                    return 0;
+                }
+            }
+            temp = start;
+            while(temp != NULL)
+            {
+                struct employee *next;
+                next = temp ->link;
+                free(temp);
+                temp = next;
+            }
+            return 1;
+        }
+        else
+        {
+            temp = start;
+            while(temp != NULL)
+            {
+                struct employee *next;
+                next = temp ->link;
+                free(temp);
+                temp = next;
+            }
+            return 0;
+        }
+    }
+    else
+    {
+        temp = start;
+        while(temp != NULL)
+        {
+            struct employee *next;
+            next = temp ->link;
+            free(temp);
+            temp = next;
+        }
+        return 0;
+    }
+}
+int Check_email_Staff(char email[40])
+{
+    struct employee *start = NULL, *temp = NULL, *end = NULL;
+    char line[100];
+    FILE *fp;
+    int i, j, n, k = 0;
+    fp = fopen("Employee Profile.txt", "r");
+    while(1)
+    {
+        temp = malloc(sizeof(struct employee));
+        if(fgets(line, sizeof(line), fp) == NULL)
+        {
+            break;
+        }
+        // ba estefade as strcspn \n ra peida va bejash \0 garar midahim.
+        line[strcspn(line, "\n")] = '\0';
+        strcpy(temp->name, line);
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->family, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->date, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->phone, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->code_meli, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->email, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->username, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->password, line);
+        }
+        temp->link = NULL;
+        if(start == NULL)
+        {
+            start = temp;
+            end = temp;
+        }
+        else
+        {
+            end->link = temp;
+            end = temp;
+        }
+    }
+    fclose(fp);
+    temp = start;
+    while(temp != NULL)
+    {
+        if(strcmp(email, temp->email) == 0)
+        {
+            temp = start;
+            while(temp != NULL)
+            {
+                struct employee *next;
+                next = temp ->link;
+                free(temp);
+                temp = next;
+            }
+            return 0;
+        }
+        else
+        {
+            temp = temp ->link;
+        }
+    }
+    if((email[0] >= 'a' && email[0] <= 'z') || (email[0] >= 'A' && email[0] <= 'Z'))
+    {
+        for(i = 1; i <= strlen(email) - 1; i++)
+        {
+            if(email[i] == '@')
+            {
+                for(n = i + 2; n <= strlen(email) - 1; n++)
+                {
+                    if(email[n] == '.' && n != strlen(email) - 1)
+                    {
+                        if((strlen(email) - 1) - n != 0)
+                        {
+                            temp = start;
+                            while(temp != NULL)
+                            {
+                                struct employee *next;
+                                next = temp ->link;
+                                free(temp);
+                                temp = next;
+                            }
+                            return 1;
+                        }
+
+                    }
+                }
+            }
+        }
+    }
+    if(k == 0)
+    {
+        temp = start;
+        while(temp != NULL)
+        {
+            struct employee *next;
+            next = temp ->link;
+            free(temp);
+            temp = next;
+        }
+        return 0;
+    }
+}
+int check_password_Staff(char password[20])
+{
+    struct employee *start = NULL, *temp = NULL, *end = NULL;
+    char line[100];
+    FILE *fp;
+    int i;
+    fp = fopen("Employee Profile.txt", "r");
+    while(1)
+    {
+        temp = malloc(sizeof(struct employee));
+        if(fgets(line, sizeof(line), fp) == NULL)
+        {
+            break;
+        }
+        // ba estefade as strcspn \n ra peida va bejash \0 garar midahim.
+        line[strcspn(line, "\n")] = '\0';
+        strcpy(temp->name, line);
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->family, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->date, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->phone, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->code_meli, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->email, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->username, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->password, line);
+        }
+        temp->link = NULL;
+        if(start == NULL)
+        {
+            start = temp;
+            end = temp;
+        }
+        else
+        {
+            end->link = temp;
+            end = temp;
+        }
+    }
+    fclose(fp);
+    temp = start;
+    while(temp != NULL)
+    {
+        if(strcmp(temp->password, password) == 0)
+        {
+            temp = start;
+            while(temp != NULL)
+            {
+                struct employee *next;
+                next = temp ->link;
+                free(temp);
+                temp = next;
+            }
+            return 0;
+        }
+        else
+        {
+            temp = temp->link;
+        }
+    }
+    if(strlen(password) >= 8 && strlen(password) <= 16)
+    {
+        if(strchr(password, 'A') != NULL || strchr(password, 'B') != NULL || strchr(password, 'C') != NULL || strchr(password, 'D') != NULL || strchr(password, 'E') != NULL || strchr(password, 'F') != NULL || strchr(password, 'G') != NULL || strchr(password, 'H') != NULL || strchr(password, 'I') != NULL || strchr(password, 'J') != NULL || strchr(password, 'K') != NULL || strchr(password, 'L') != NULL || strchr(password, 'M') != NULL || strchr(password, 'N') != NULL || strchr(password, 'O') != NULL || strchr(password, 'P') != NULL || strchr(password, 'Q') != NULL || strchr(password, 'R') != NULL || strchr(password, 'S') != NULL || strchr(password, 'T') != NULL || strchr(password, 'U') != NULL || strchr(password, 'V') != NULL || strchr(password, 'W') != NULL || strchr(password, 'X') != NULL || strchr(password, 'Y') != NULL || strchr(password, 'Z') != NULL )
+        {
+            if(strchr(password, '0') != NULL || strchr(password, '1') != NULL || strchr(password, '2') != NULL || strchr(password, '3') != NULL || strchr(password, '4') != NULL || strchr(password, '5') != NULL || strchr(password, '6') != NULL || strchr(password, '7') != NULL || strchr(password, '8') != NULL || strchr(password, '9') != NULL)
+            {
+                if(strchr(password, '@') != NULL || strchr(password, '_') != NULL || strchr(password, '&') != NULL || strchr(password, '#') != NULL || strchr(password, '$') != NULL)
+                {
+                    return 1;
+                }
+                else
+                {
+                    temp = start;
+                    while(temp != NULL)
+                    {
+                        struct employee *next;
+                        next = temp ->link;
+                        free(temp);
+                        temp = next;
+                    }
+                    return 0;
+                }
+            }
+            else
+            {
+                temp = start;
+                while(temp != NULL)
+                {
+                    struct employee *next;
+                    next = temp ->link;
+                    free(temp);
+                    temp = next;
+                }
+                return 0;
+            }
+        }
+        else
+        {
+            temp = start;
+            while(temp != NULL)
+            {
+                struct employee *next;
+                next = temp ->link;
+                free(temp);
+                temp = next;
+            }
+            return 0;
+        }
+    }
+    else
+    {
+        temp = start;
+        while(temp != NULL)
+        {
+            struct employee *next;
+            next = temp ->link;
+            free(temp);
+            temp = next;
+        }
+        return 0;
+    }
+}
+int Check_username_Staff(char username[20])
+{
+    struct employee *start = NULL, *temp = NULL, *end = NULL;
+    char line[100];
+    FILE *fp;
+    int i;
+    fp = fopen("Employee Profile.txt", "r");
+    while(1)
+    {
+        temp = malloc(sizeof(struct employee));
+        if(fgets(line, sizeof(line), fp) == NULL)
+        {
+            break;
+        }
+        // ba estefade as strcspn \n ra peida va bejash \0 garar midahim.
+        line[strcspn(line, "\n")] = '\0';
+        strcpy(temp->name, line);
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->family, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->date, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->phone, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->code_meli, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->email, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->username, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->password, line);
+        }
+        temp->link = NULL;
+        if(start == NULL)
+        {
+            start = temp;
+            end = temp;
+        }
+        else
+        {
+            end->link = temp;
+            end = temp;
+        }
+    }
+    fclose(fp);
+    temp = start;
+    while(temp != NULL)
+    {
+        if(strcmp(temp->username, username) == 0)
+        {
+            return 0;
+        }
+        else
+        {
+            temp = temp->link;
+        }
+    }
+    return 1;
 }
 void menu(void)
 {
@@ -463,36 +1140,167 @@ void Admin_menu(void)
 }
 void New_employee(void)
 {
-    int i;
+    char i[100];
     struct employee *start;
     FILE *fp;
     system("cls");
     fp = fopen("Employee Profile.txt","a");
     start = malloc(sizeof(struct employee));
-    printf("Please enter the name's employee:");
-    scanf("%s",start->name);
+    printf("                                                  1. Back\n");
+    printf("Please enter the name's employee:\n");
+    while(1)
+    {
+        fflush(stdin);
+        scanf("%s",start->name);
+        if(strcmp(start->name, one) == 0)
+        {
+            Admin_menu();
+        }
+        if(check_name_Staff(start->name) != 0)
+        {
+            break;
+        }
+        else
+        {
+            printf("Please enter the name correctly, for example: Amir\n");
+        }
+    }
     printf("\n");
     printf("Please enter the family name's employee:");
-    scanf("%s",start->family);
+    while(1)
+    {
+        fflush(stdin);
+        scanf("%s",start->family);
+        if(strcmp(start->family, one) == 0)
+        {
+            Admin_menu();
+        }
+        if(check_name_Staff(start->family) != 0)
+        {
+            break;
+        }
+        else
+        {
+            printf("Please enter the last name correctly, for example: Nasiri\n");
+        }
+    }
     printf("\n");
     printf("The registration date:");
     date(start->date);
     puts(start->date);
     printf("\n");
     printf("Please enter the phone number's employee:");
-    scanf("%s",start->phone);
+    while(1)
+    {
+        fflush(stdin);
+        scanf("%s",start->phone);
+        if(strcmp(start->phone, one) == 0)
+        {
+            Admin_menu();
+        }
+        if(check_phone_Staff(start->phone) != 0)
+        {
+            break;
+        }
+        else
+        {
+            printf("Please enter the phone number correctly, for example: 09123456789\n");
+        }
+    }
     printf("\n");
     printf("Please enter the employee's national code:");
-    scanf("%s",start->code_meli);
+    while(1)
+    {
+        fflush(stdin);
+        scanf("%s",start->code_meli);
+        if(strcmp(start->code_meli, one) == 0)
+        {
+            Admin_menu();
+        }
+        if(check_code_meli_Staff(start->code_meli) != 0)
+        {
+            break;
+        }
+        else
+        {
+            printf("Please enter the national code correctly, for example: 1234567890\n");
+        }
+    }
     printf("\n");
     printf("Please enter the employee's email:");
-    scanf("%s",start->email);
+    while(1)
+    {
+        fflush(stdin);
+        scanf("%s",start->email);
+        if(strcmp(start->email, one) == 0)
+        {
+            Admin_menu();
+        }
+        if(Check_email_Staff(start->email) != 0)
+        {
+            break;
+        }
+        else
+        {
+            printf("Please enter the national code correctly, for example: amir@gmail.com\n");
+        }
+    }
     printf("\n");
     printf("Please enter the user name for employee:");
-    scanf("%s",start->username);
+    while(1)
+    {
+        fflush(stdin);
+        scanf("%s",start->username);
+        if(strcmp(start->username, one) == 0)
+        {
+            Admin_menu();
+        }
+        if(Check_username_Staff(start->username) != 0)
+        {
+            break;
+        }
+        else
+        {
+            printf("The user name is duplicate.Please enter another user name:\n");
+        }
+    }
     printf("\n");
     printf("Please enter the password for employee:");
-    scanf("%s",start->password);
+    while(1)
+    {
+        fflush(stdin);
+        scanf("%s",start->password);
+        if(strcmp(start->password, one) == 0)
+        {
+            Admin_menu();
+        }
+        if(check_password_Staff(start->password) != 0)
+        {
+            printf("\nPlease enter again:\n");
+            while(1)
+            {
+                fflush(stdin);
+                scanf("%s", i);
+                if(strcmp(i, one) == 0)
+                {
+                    Admin_menu();
+                }
+                if(strcmp(i, start->password) == 0)
+                {
+                    break;
+                }
+                else
+                {
+                    printf("The two passwords do not match.Please try again:\n");
+                }
+            }
+            break;
+        }
+        else
+        {
+            printf("This password is too simple.Please enter a stronger password:\n");
+        }
+    }
     fputs(start->name,fp);
     fprintf(fp,"\n");
     fputs(start->family,fp);
@@ -520,6 +1328,7 @@ void New_employee(void)
     printf("Please Enter Your Choice:");
     while(1)
     {
+        fflush(stdin);
         scanf("%s", i);
         if(strcmp(i, one) == 0)
         {
@@ -1954,10 +2763,20 @@ void report_Admin_history_book(void)
     printf("Please enter the Date:(For example 2025-01-02)\n");
     while(1)
     {
+        printf("Please enter the Start date:\n");
         fflush(stdin);
         scanf("%s", i);
+        if(strcmp(i, one) == 0)
+        {
+            report_Admin();
+        }
+        printf("Please enter the End date:\n");
         fflush(stdin);
         scanf("%s", k);
+        if(strcmp(k, one) == 0)
+        {
+            report_Admin();
+        }
         if(strlen(i) == 10 && strlen(k) == 10 && i[4] == '-' && k[4] == '-' && i[7] == '-' && k[7] == '-')
         {
             break;
@@ -3579,10 +4398,34 @@ void Change_Password(void)
         if(strcmp(temp->username, karmand) == 0)
         {
             printf("Please enter the New password:                              1.Back\n");
-            scanf("%s", temp->password);
-            if(strcmp(temp->password, one) == 0)
+            while(1)
             {
-                setting_employee();
+                scanf("%s", temp->password);
+                if(strcmp(temp->password, one) == 0)
+                {
+                    setting_employee();
+                }
+                if(check_password_Staff(temp->password) != 0)
+                {
+                    while(1)
+                    {
+                        printf("Please enter again:\n");
+                        scanf("%s", i);
+                        if(strcmp(i, temp->password) == 0)
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            printf("The two passwords do not match.Please try again:\n");
+                        }
+                    }
+                    break;
+                }
+                else
+                {
+                    printf("The password is either too simple or has already been chosen.Please try again.\n");
+                }
             }
         }
         temp = temp->link;
@@ -3706,10 +4549,21 @@ void Change_Email(void)
         if(strcmp(temp->username, karmand) == 0)
         {
             printf("Please enter the New email:                              1.Back\n");
-            scanf("%s", temp->email);
-            if(strcmp(temp->email, one) == 0)
+            while(1)
             {
-                setting_employee();
+                scanf("%s", temp->email);
+                if(strcmp(temp->email, one) == 0)
+                {
+                    setting_employee();
+                }
+                if(Check_email_Staff(temp->email) != 0)
+                {
+                    break;
+                }
+                else
+                {
+                    printf("Please enter the national code correctly, for example: amir@gmail.com or maybe this email has already been entered.\n");
+                }
             }
         }
         temp = temp->link;
@@ -3833,10 +4687,21 @@ void Change_Phone(void)
         if(strcmp(temp->username, karmand) == 0)
         {
             printf("Please enter the New number phone:                              1.Back\n");
-            scanf("%s", temp->phone);
-            if(strcmp(temp->phone, one) == 0)
+            while(1)
             {
-                setting_employee();
+                scanf("%s", temp->phone);
+                if(strcmp(temp->phone, one) == 0)
+                {
+                    setting_employee();
+                }
+                if(check_phone_Staff(temp->phone) == 0)
+                {
+                    break;
+                }
+                else
+                {
+                    printf("Please enter the phone number correctly, for example: 09123456789 or maybe this phone number has already been entered\n");
+                }
             }
         }
         temp = temp->link;
@@ -4102,13 +4967,13 @@ void report_Staff(void)
             {
                 if(strcmp(i, three) == 0)
                 {
-
+                    report_Staff_history_book();
                 }
                 else
                 {
                     if(strcmp(i, four) == 0)
                     {
-
+                        report_Staff_history_member();
                     }
                     else
                     {
@@ -4543,6 +5408,482 @@ void report_Staff_list_book(void)
         next = temp->link;
         free(temp);
         temp = next;
+    }
+    while(1)
+    {
+        scanf("%s", i);
+        if(strcmp(i, one) == 0)
+        {
+            report_Staff();
+        }
+        else
+        {
+            printf("Please enter one.\n");
+        }
+    }
+}
+void report_Staff_history_book(void)
+{
+    system("cls");
+    char i[100];
+    FILE *fp;
+    char line[100], username[20];
+    int j = 0, k = 0;
+    HANDLE color = GetStdHandle(STD_OUTPUT_HANDLE);
+    struct return_book *start = NULL, *end = NULL, * temp = NULL;
+    struct book *start1 = NULL, *end1 = NULL, *temp1 = NULL;
+    fp = fopen("Return Book.txt", "r");
+    while(1)
+    {
+        temp = malloc(sizeof(struct return_book));
+        if(fgets(line, sizeof(line), fp) == NULL)
+        {
+            break;
+        }
+        line[strcspn(line, "\n")] = '\0';
+        strcpy(temp->user_name, line);
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->name, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->date_trust, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->date_take, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->date_return, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->id, line);
+        }
+        temp->link = NULL;
+        if(start == NULL)
+        {
+            start = temp;
+            end = temp;
+        }
+        else
+        {
+            end->link = temp;
+            end = temp;
+        }
+    }
+    fclose(fp);
+    fflush(stdin);
+    printf("                                                                    1.Back\n");
+    printf("Please enter the username:");
+    scanf("%s", username);
+    if(strcmp(username, one) == 0)
+    {
+        report_Staff();
+    }
+    temp = start;
+    printf("Returned books\n");
+    while(temp != NULL)
+    {
+        if(strcmp(temp->user_name, username) == 0)
+        {
+            printf("NAME BOOK:                          ");
+            puts(temp->name);
+            printf("TRUST REGISTRATION DATE:            ");
+            puts(temp->date_trust);
+            printf("BOOK RATURN DATE:                   ");
+            puts(temp->date_return);
+            printf("BOOK ID:                            ");
+            puts(temp->id);
+            printf("SOMEONE WHO BORROWED:               ");
+            puts(temp->user_name);
+            temp = temp->link;
+            printf("--------------------------------------------------------------------\n");
+            j++;
+        }
+    }
+    if(j == 0)
+    {
+        printf("NULL\n");
+    }
+    temp = start;
+    while(temp != NULL)
+    {
+        struct return_book *next;
+        next = temp->link;
+        free(temp);
+        temp = next;
+    }
+    j = 0;
+    fp = fopen("Book Profile.txt", "r");
+    while(1)
+    {
+        temp1 = malloc(sizeof(struct book));
+        if(fgets(line, sizeof(line), fp) == NULL)
+        {
+            break;
+        }
+        // ba estefade as strcspn \n ra peida va bejash \0 garar midahim.
+        line[strcspn(line, "\n")] = '\0';
+        strcpy(temp1->name, line);
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp1->publication, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp1->author, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp1->year, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp1->date, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp1->id, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp1->username, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp1->genre, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp1->username_member, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp1->date_trust, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp1->date_take, line);
+        }
+        temp1->link = NULL;
+        if(start1 == NULL)
+        {
+            start1 = temp1;
+            end1 = temp1;
+        }
+        else
+        {
+            end1->link = temp1;
+            end1 = temp1;
+        }
+    }
+    fclose(fp);
+    printf("Unreturned books\n");
+    temp1 = start1;
+    while(temp1 != NULL)
+    {
+        if(strcmp(temp1->username_member, username) == 0)
+        {
+            printf("NAME BOOK:                          ");
+            SetConsoleTextAttribute(color, 12);
+            puts(temp1->name);
+            SetConsoleTextAttribute(color, 7);
+            printf("TRUST REGISTRATION DATE:            ");
+            SetConsoleTextAttribute(color, 12);
+            puts(temp1->date_trust);
+            SetConsoleTextAttribute(color, 7);
+            printf("BOOK RATURN DATE:                   ");
+            SetConsoleTextAttribute(color, 12);
+            printf("NULL\n");
+            SetConsoleTextAttribute(color, 7);
+            printf("BOOK ID:                            ");
+            SetConsoleTextAttribute(color, 12);
+            puts(temp1->id);
+            SetConsoleTextAttribute(color, 7);
+            printf("SOMEONE WHO BORROWED:               ");
+            SetConsoleTextAttribute(color, 12);
+            puts(temp1->username_member);
+            SetConsoleTextAttribute(color, 7);
+            temp = temp1->link;
+            printf("--------------------------------------------------------------------\n");
+            j++;
+        }
+        temp1 = temp1->link;
+    }
+    temp1 = start1;
+    while(temp1 != NULL)
+    {
+        struct book *next;
+        next = temp1->link;
+        free(temp1);
+        temp1 = next;
+    }
+    if(j == 0)
+    {
+        printf("NULL\n");
+    }
+    while(1)
+    {
+        scanf("%s", i);
+        if(strcmp(i, one) == 0)
+        {
+            report_Staff();
+        }
+        else
+        {
+            printf("Please enter one.\n");
+        }
+    }
+}
+void report_Staff_history_member(void)
+{
+    system("cls");
+    char i[100], k[100];
+    int j = 0;
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    struct member *start = NULL, *end = NULL, *temp = NULL;
+    char line[100];
+    FILE *fp;
+    fp = fopen("Member Profile.txt", "r");
+    while(1)
+    {
+        temp = malloc(sizeof(struct member));
+        if(fgets(line, sizeof(line), fp) == NULL)
+        {
+            break;
+        }
+        // ba estefade as strcspn \n ra peida va bejash \0 garar midahim.
+        line[strcspn(line, "\n")] = '\0';
+        strcpy(temp->name, line);
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->family, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->date, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->end_date, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->phone, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->code_meli, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->email, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->active, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->username, line);
+        }
+        if(fgets(line, sizeof(line), fp) != NULL)
+        {
+            line[strcspn(line, "\n")] = '\0';
+            strcpy(temp->password, line);
+        }
+        temp->link = NULL;
+        if(start == NULL)
+        {
+            start = temp;
+            end = temp;
+        }
+        else
+        {
+            end->link = temp;
+            end = temp;
+        }
+    }
+    fclose(fp);
+    printf("                                                                    1.Back\n");
+    printf("Please enter the Date:(For example 2025-01-02)\n");
+    while(1)
+    {
+        printf("Please enter the Start date:\n");
+        fflush(stdin);
+        scanf("%s", i);
+        if(strcmp(i, one) == 0)
+        {
+            report_Staff();
+        }
+        printf("Please enter the End date:\n");
+        fflush(stdin);
+        scanf("%s", k);
+        if(strcmp(k , one) == 0)
+        {
+            report_Staff();
+        }
+        if(strlen(i) == 10 && strlen(k) == 10 && i[4] == '-' && k[4] == '-' && i[7] == '-' && k[7] == '-')
+        {
+            break;
+        }
+        else
+        {
+            printf("Please enter the dates as in the example.\n");
+        }
+    }
+    temp = start;
+    while(temp != NULL)
+    {
+        if(strcmp(i, temp->date) <= 0 && strcmp(k, temp->date) >= 0)
+        {
+            if(strcmp(temp->active, "Active") == 0)
+            {
+                printf("FIRST NAME:                         ");
+                SetConsoleTextAttribute(hConsole, 10);
+                puts(temp->name);
+                SetConsoleTextAttribute(hConsole, 7);
+                printf("LAST NAME:                          ");
+                SetConsoleTextAttribute(hConsole, 10);
+                puts(temp->family);
+                SetConsoleTextAttribute(hConsole, 7);
+                printf("REGISTRATION DATE:                  ");
+                SetConsoleTextAttribute(hConsole, 10);
+                puts(temp->date);
+                SetConsoleTextAttribute(hConsole, 7);
+                printf("MEMBERSHIP EXPIRATION DATE:         ");
+                SetConsoleTextAttribute(hConsole, 10);
+                puts(temp->end_date);
+                SetConsoleTextAttribute(hConsole, 7);
+                printf("PHONE NUMBER:                       ");
+                SetConsoleTextAttribute(hConsole, 10);
+                puts(temp->phone);
+                SetConsoleTextAttribute(hConsole, 7);
+                printf("NATIONAL CODE:                      ");
+                SetConsoleTextAttribute(hConsole, 10);
+                puts(temp->code_meli);
+                SetConsoleTextAttribute(hConsole, 7);
+                printf("EMAIL:                              ");
+                SetConsoleTextAttribute(hConsole, 10);
+                puts(temp->email);
+                SetConsoleTextAttribute(hConsole, 7);
+                printf("STATUS:                             ");
+                SetConsoleTextAttribute(hConsole, 10);
+                puts(temp->active);
+                SetConsoleTextAttribute(hConsole, 7);
+                printf("USERNAME:                           ");
+                SetConsoleTextAttribute(hConsole, 10);
+                puts(temp->username);
+                SetConsoleTextAttribute(hConsole, 7);
+                printf("PASSWORD:                           ");
+                SetConsoleTextAttribute(hConsole, 10);
+                puts(temp->password);
+                SetConsoleTextAttribute(hConsole, 7);
+            }
+            if(strcmp(temp->active, "Inactive") == 0)
+            {
+                printf("FIRST NAME:                         ");
+                SetConsoleTextAttribute(hConsole, 12);
+                puts(temp->name);
+                SetConsoleTextAttribute(hConsole, 7);
+                printf("LAST NAME:                          ");
+                SetConsoleTextAttribute(hConsole, 12);
+                puts(temp->family);
+                SetConsoleTextAttribute(hConsole, 7);
+                printf("REGISTRATION DATE:                  ");
+                SetConsoleTextAttribute(hConsole, 12);
+                puts(temp->date);
+                SetConsoleTextAttribute(hConsole, 7);
+                printf("MEMBERSHIP EXPIRATION DATE:         ");
+                SetConsoleTextAttribute(hConsole, 12);
+                puts(temp->end_date);
+                SetConsoleTextAttribute(hConsole, 7);
+                printf("PHONE NUMBER:                       ");
+                SetConsoleTextAttribute(hConsole, 12);
+                puts(temp->phone);
+                SetConsoleTextAttribute(hConsole, 7);
+                printf("NATIONAL CODE:                      ");
+                SetConsoleTextAttribute(hConsole, 12);
+                puts(temp->code_meli);
+                SetConsoleTextAttribute(hConsole, 7);
+                printf("EMAIL:                              ");
+                SetConsoleTextAttribute(hConsole, 12);
+                puts(temp->email);
+                SetConsoleTextAttribute(hConsole, 7);
+                printf("STATUS:                             ");
+                SetConsoleTextAttribute(hConsole, 12);
+                puts(temp->active);
+                SetConsoleTextAttribute(hConsole, 7);
+                printf("USERNAME:                           ");
+                SetConsoleTextAttribute(hConsole, 12);
+                puts(temp->username);
+                SetConsoleTextAttribute(hConsole, 7);
+                printf("PASSWORD:                           ");
+                SetConsoleTextAttribute(hConsole, 12);
+                puts(temp->password);
+                SetConsoleTextAttribute(hConsole, 7);
+            }
+            if(strcmp(temp->active, "Farmer") == 0)
+            {
+                printf("FIRST NAME:                         ");
+                puts(temp->name);
+                printf("LAST NAME:                          ");
+                puts(temp->family);
+                printf("REGISTRATION DATE:                  ");
+                puts(temp->date);
+                printf("MEMBERSHIP EXPIRATION DATE:         ");
+                puts(temp->end_date);
+                printf("PHONE NUMBER:                       ");
+                puts(temp->phone);
+                printf("NATIONAL CODE:                      ");
+                puts(temp->code_meli);
+                printf("EMAIL:                              ");
+                puts(temp->email);
+                printf("STATUS:                             ");
+                puts(temp->active);
+                printf("USERNAME:                           ");
+                puts(temp->username);
+                printf("PASSWORD:                           ");
+                puts(temp->password);
+            }
+            printf("--------------------------------------------------------------------\n");
+            temp = temp->link;
+            j++;
+        }
+        else
+        {
+            temp = temp->link;
+        }
+    }
+    if(j == 0)
+    {
+        printf("NULL");
     }
     while(1)
     {
